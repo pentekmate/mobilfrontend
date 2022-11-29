@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, View, Text,RefreshControl,FlatList,Pressable} from 'react-native';
+import { Button, StyleSheet, View, Text,RefreshControl,FlatList,Pressable,TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -15,15 +15,6 @@ export default class Kiir extends Component {
            
         };
     }
-  
-    componentDidMount(){
-        this.getData().then(adatokvissza=>{ 
-        this.setState({products:adatokvissza}) 
-          })
-          
-         
-    }
-    
     getData = async () => {
         try {
           const jsonValue = await AsyncStorage.getItem('@lista')
@@ -32,6 +23,15 @@ export default class Kiir extends Component {
         
         }
       }
+    componentDidMount(){
+        this.getData().then(adatokvissza=>{ 
+        this.setState({products:adatokvissza}) 
+          })
+          
+         
+    }
+    
+    
       wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
       }
@@ -75,9 +75,15 @@ export default class Kiir extends Component {
                                 </Pressable>
                                 <Text>{item.megnevezes}</Text>
                             </View>
+                           
                         </View>
                     )}
                 />
+                 <TouchableOpacity
+                            
+                            onPress={this.componentDidMount}>
+                            <Text>Frissítés</Text>
+                        </TouchableOpacity>
   </View>
         );
     }

@@ -1,7 +1,9 @@
 import React, { Component} from 'react';
-import { Button, StyleSheet, View, FlatList, Text, TouchableOpacity, TextInput,Pressable } from 'react-native';
+import { Button, StyleSheet, View, FlatList, Text, TouchableOpacity, TextInput,Pressable,Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+
 
 
 
@@ -12,18 +14,15 @@ export default class Listaad extends Component {
     this.state = {
       data: [],
       listaelem:"",
-      termekektomb:[{id:1,megnevezes:"retek",isChecked:false},{id:2,megnevezes:"alma",isChecked:false},]
+      termekektomb:[{id:1,megnevezes:"Cukor",isChecked:false},{id:2,megnevezes:"Liszt",isChecked:false},{id:3,megnevezes:"Kenyér",isChecked:false},{id:4,megnevezes:"Kávé",isChecked:false}]
     };
   }
- /*-*/
 
-  
   storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
       await AsyncStorage.setItem('@lista', jsonValue)
     } catch (e) {
-      // saving error
     }
   }
 
@@ -41,8 +40,6 @@ export default class Listaad extends Component {
       console.log(vissza_adatok2)
       this.setState({data:vissza_adatok2}) 
     })
-
-    
 
   }
   felvitel=()=>{
@@ -63,7 +60,6 @@ export default class Listaad extends Component {
       this.setState({data:uj})
       this.storeData(uj)
      
- 
   }
   mindentorles=()=>{
     this.setState({ data : []})
@@ -102,35 +98,27 @@ export default class Listaad extends Component {
       }
     })
 };
-  
- 
-  
-
   render() {
     return (
       
       <View style={{flex:6,flexDirection:"column",marginTop:10}}>
         {/*----FELSŐ CHECKBOX ELEMEI----*/}
        <View style={{flex:1}}> 
-           <FlatList
-                    data={this.state.termekektomb}
-                    renderItem={({ item }) => (
-                        <View>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    flex: 1,
-                                    justifyContent: 'space-between',
-                                }}>
-                                <Pressable onPress={() => this.handleChange(item.id)} >
-                                    <MaterialCommunityIcons
-                                        name={item.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'} size={24} color="#000" />
-                                </Pressable>
-                                <Text>{item.megnevezes}</Text>
-                            </View>
-                        </View>
-                    )}
-                />
+       <SwiperFlatList
+      style={{alignSelf:"center"}}
+      index={0}
+      data={this.state.termekektomb}
+      renderItem={({ item }) => (
+        <View style={styles.child}>
+              <Pressable onPress={() => this.handleChange(item.id)} >
+              <MaterialCommunityIcons
+              name={item.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'} size={24} color="#000" />
+              </Pressable>
+              <Text style={styles.text}>{item.megnevezes}</Text>
+        </View>    
+      )}                  
+     />
+        
       </View>
        {/*----LISTÁBA TÖLTÉS INPUTTAL---*/}
       <View style={{flex:1}}>
@@ -142,14 +130,16 @@ export default class Listaad extends Component {
         value={this.state.listaelem}
       />       
         </View>
-      <Button
-      style={{marginTop:50}}
-      title="Hozzáad"
-      onPress={this.felvitel}></Button>
-       <Button
-       style={{marginTop:50}}  
-      title="torles"
-      onPress={this.mindentorles}></Button>
+        <TouchableOpacity
+        style={styles.button}
+        onPress={this.felvitel}>
+        <Text style={styles.gomb}>Hozzáad</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={this.mindentorles}>
+        <Text style={styles.gomb}>Minden törlése</Text>
+      </TouchableOpacity>
      
       </View>
       {/*----lISTA ELEMEINEK MUTATÁSA----*/}
@@ -158,10 +148,13 @@ export default class Listaad extends Component {
             data={this.state.data}
             keyExtractor={({ id }, index) => id}
             renderItem={({ item }) => (
-              <View style={styles.liladoboz}   >
+              <View style={styles.liladoboz}>
+               
+                 <Text>{item.id},{item.megnevezes}</Text>
                  
-                <Text>{item.id},{item.megnevezes}</Text>
+              
                 </View>
+                
                  )}
                 />
         
@@ -171,7 +164,7 @@ export default class Listaad extends Component {
     );
   }
 }
-
+const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   liladoboz:{
     borderColor:"purple",
@@ -179,8 +172,23 @@ const styles = StyleSheet.create({
     margin:10,
     padding:10,
     borderRadius:5
-  }
-
+  },
+  gomb:
+  {
+    textAlign:"center",
+    alignSelf:"center",
+    width:300,
+    backgroundColor:"lightblue",
+    borderColor:"black",
+    borderWidth:2,
+    borderRadius:5,
+    
+  },
+  button:{
+    margin:5
+  },
+  child:{width:width,alignSelf:"center",alignItems:"center",alignContent:"center"},
+  text:{textAlign:"center",fontSize:18}
 
 
 });
