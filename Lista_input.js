@@ -1,6 +1,8 @@
 import React, { Component} from 'react';
-import { Button, StyleSheet, View, FlatList, Text, TouchableOpacity, TextInput } from 'react-native';
+import { Button, StyleSheet, View, FlatList, Text, TouchableOpacity, TextInput,Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 
 
 export default class Listaad extends Component {
@@ -10,6 +12,11 @@ export default class Listaad extends Component {
     this.state = {
       data: [],
       listaelem:"",
+      termekektomb:[{id:1,
+      megnevezes:"retek",
+      isChecked:false},{id:2,
+      megnevezes:"alma",
+      isChecked:false},]
     };
   }
  /*-*/
@@ -66,12 +73,46 @@ export default class Listaad extends Component {
     this.setState({ data : []})
     this.storeData([])
   }
+  handleChange = (id) => {
+    let temp = this.state.termekektomb.map((product) => {
+        if (id === product.id) {
+            return { ...product, isChecked: !product.isChecked };
+        }
+       
+        return product;
+        
+    });
+    let x=this.state.data.length;
+    let uj=[]
+      
+     
+ 
+    this.setState({termekektomb: temp})
+    let nev=this.state.termekektomb.map((product) => {
+      if (id === product.id) {
+        if(this.state.listaelem!=null)
+        {
+          uj=this.state.data
+        }
+        uj.push({
+          "id":x,
+          "megnevezes":product.megnevezes,
+          "isChecked":false
+         
+        })
+        
+        this.setState({data:uj})
+        this.storeData(uj)
+      }
+    })
+};
   
  
   
 
   render() {
     return (
+      
       <View style={styles.container}>
       
       
@@ -107,7 +148,25 @@ export default class Listaad extends Component {
                  )}
                 />
         
-         
+        <FlatList
+                    data={this.state.termekektomb}
+                    renderItem={({ item }) => (
+                        <View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    flex: 1,
+                                    justifyContent: 'space-between',
+                                }}>
+                                <Pressable onPress={() => this.handleChange(item.id)} >
+                                    <MaterialCommunityIcons
+                                        name={item.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'} size={24} color="#000" />
+                                </Pressable>
+                                <Text>{item.megnevezes}</Text>
+                            </View>
+                        </View>
+                    )}
+                />
       </View>
     );
   }

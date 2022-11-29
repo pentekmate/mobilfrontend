@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, View, Text, ScrollView,RefreshControl,FlatList,Pressable} from 'react-native';
-import {DevSettings} from 'react-native';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Button, StyleSheet, View, Text,RefreshControl,FlatList,Pressable} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 
 
@@ -13,8 +11,7 @@ export default class Kiir extends Component {
         super(props);
         this.state = {
             products: [],
-            refreshing:false,
-            setRefreshing:false
+           
            
         };
     }
@@ -62,14 +59,25 @@ export default class Kiir extends Component {
     render() {
         return (
           <View>
-          {this.staterefreshing ? <ActivityIndicator /> : null}
-    <FlatList
-      data={this.state.products}
-      renderItem={ItemView}
-      refreshControl={
-        <RefreshControl refreshing={this.state.refreshing} onRefresh={this.App} />
-      }
-    />
+          <FlatList
+                    data={this.state.products}
+                    renderItem={({ item }) => (
+                        <View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    flex: 1,
+                                    justifyContent: 'space-between',
+                                }}>
+                                <Pressable onPress={() => this.handleChange(item.id)} >
+                                    <MaterialCommunityIcons
+                                        name={item.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'} size={24} color="#000" />
+                                </Pressable>
+                                <Text>{item.megnevezes}</Text>
+                            </View>
+                        </View>
+                    )}
+                />
   </View>
         );
     }
