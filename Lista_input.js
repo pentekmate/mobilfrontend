@@ -31,6 +31,8 @@ export default class Listaad extends Component {
     let tartalom =[]
     this.state.data.map((item)=>tartalom.push(item.megnevezes))
     alert(tartalom)
+
+    
     if(this.state.listanev.length==0)
     {
       this.state.listanev=this.getCurrentDate();
