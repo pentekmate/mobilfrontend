@@ -18,7 +18,7 @@ export default class Listaad extends Component {
       termekektomb:[{id:1,megnevezes:"Cukor",isChecked:false},{id:2,megnevezes:"Liszt",isChecked:false},{id:3,megnevezes:"Kenyér",isChecked:false},{id:4,megnevezes:"Kávé",isChecked:false}]
     };
   }
-   getCurrentDate=(datum)=>{
+   getCurrentDate=()=>{
  
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
@@ -30,9 +30,13 @@ export default class Listaad extends Component {
   adatatad=()=>{
     let tartalom =[]
     this.state.data.map((item)=>tartalom.push(item.megnevezes))
+<<<<<<< HEAD
     alert(tartalom)
 
     
+=======
+    //alert(tartalom)
+>>>>>>> 6cead7ebae2f848aee14bcd0e68c0a6185e5f78b
     if(this.state.listanev.length==0)
     {
       this.state.listanev=this.getCurrentDate();
@@ -46,7 +50,7 @@ export default class Listaad extends Component {
         bevitel1:this.state.listanev,
         bevitel2:tartalom
       }
-      const response = fetch('http://192.168.6.19:3000/tartalomfel',{
+      const response = fetch('http://pentek-mate-miklos.dszcbaross.tk/tartalomfel',{
         method: "POST",
         body: JSON.stringify(adatok),
         headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -100,6 +104,7 @@ export default class Listaad extends Component {
       this.storeData(uj)
       this.state.listaelem="";
      
+     
   }
   mindentorles=()=>{
     this.setState({ data : []})
@@ -108,7 +113,10 @@ export default class Listaad extends Component {
     this.state.termekektomb.map((product) => {
     product.isChecked=false;   
     });
+    this.state.listanev="";
+    this.state.listaelem="";
   }
+  
   handleChange = (id) => {
     let temp = this.state.termekektomb.map((product) => {
         if (id === product.id) {
@@ -125,7 +133,7 @@ export default class Listaad extends Component {
  
     this.setState({termekektomb: temp})
     let nev=this.state.termekektomb.map((product) => {
-      if (id === product.id &&product.isChecked==false) {
+      if (id === product.id && product.isChecked==false) {
         if(this.state.listaelem!=null)
         {
           uj=this.state.data
@@ -146,8 +154,10 @@ export default class Listaad extends Component {
     return (
      
       <View style={{flex:1,flexDirection:"column",marginTop:10}}>
-         {/*----------------------------LISTAELNEVEZÉSE-------------------- */}
+         {/*----------------------------LISTAELNEVEZÉSE,MENTÉSE-------------------- */}
         <View style={{flex:1}}>
+        <View style={{flexDirection:"row"}}>
+        <View style={{flex:8,backgroundColor:"pink"}}>
         <TextInput
         fontStyle={this.state.listanev.length == 0 ? 'italic' : 'normal'}
         textAlign={this.state.listanev.length == 0 ? 'center' : 'left'}
@@ -155,8 +165,43 @@ export default class Listaad extends Component {
         placeholder="Nevezed el a listádat!"
         onChangeText={nev => this.setState({listanev : nev})}
         value={this.state.listanev}
+        /> 
+        </View>
+        <View style={{flex:2,backgroundColor:"yellow"}}>
+                <TouchableOpacity
+                onPress={this.adatatad}>
+                <Text style={styles.mentes}>Lista mentése</Text>
+                </TouchableOpacity>  
+        </View>   
+        </View>
+        </View>
+             {/*----LISTÁBA TÖLTÉS INPUTTAL---*/}
+      <View style={{flex:1,backgroundColor:"lime"}}>
+      <View style={{width:300,borderWidth:1,borderColor:"purple",borderRadius:5,alignSelf:"center"}} >
+      <TextInput
+        style={{height: 40}}
+        placeholder="Hozzáad!"
+        onChangeText={szoveg => this.setState({listaelem : szoveg})}
+        value={this.state.listaelem}
       />       
         </View>
+        <View style={{flexDirection:"row"}}>
+        <View style={{flex:5,backgroundColor:"red"}}>
+                <TouchableOpacity
+                style={styles.button}
+                onPress={this.felvitel}>
+                <Text style={styles.gomb}>Hozzáad</Text>
+              </TouchableOpacity>
+      </View> 
+      <View style={{flex:5,backgroundColor:"yellow"}}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={this.mindentorles}>
+                <Text style={styles.gomb}>Minden törlése</Text>
+              </TouchableOpacity>
+      </View>
+      </View>
+      </View>
         {/*----FELSŐ CHECKBOX ELEMEI----*/}
        <View style={{flex:1}}>    
        <FlatList
@@ -167,13 +212,14 @@ export default class Listaad extends Component {
         style={{
         flexDirection: 'row',
         justifyContent:"flex-start",
-        width:width*0.5
+        width:width*0.5,
+        margin:5
         }}>
           <Pressable onPress={() => this.handleChange(item.id)} >
             <MaterialCommunityIcons
              name={item.isChecked ? 'checkbox-marked' : 'checkbox-blank-outline'} size={24} color="#000" />
           </Pressable>
-          <Text>{item.megnevezes}</Text>
+          <Text >{item.megnevezes}</Text>
         </View>
       )}                  
      />
@@ -181,28 +227,7 @@ export default class Listaad extends Component {
      </View> 
         
     
-       {/*----LISTÁBA TÖLTÉS INPUTTAL---*/}
-      <View style={{flex:1,backgroundColor:"lime"}}>
-      <View style={{width:300,borderWidth:1,borderColor:"purple",borderRadius:5,alignSelf:"center"}} >
-      <TextInput
-        style={{height: 40}}
-        placeholder="Hozzáad!"
-        onChangeText={szoveg => this.setState({listaelem : szoveg})}
-        value={this.state.listaelem}
-      />       
-        </View>
-        <TouchableOpacity
-        style={styles.button}
-        onPress={this.felvitel}>
-        <Text style={styles.gomb}>Hozzáad</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={this.mindentorles}>
-        <Text style={styles.gomb}>Minden törlése</Text>
-      </TouchableOpacity>
-     
-      </View>
+  
       {/*----lISTA ELEMEINEK MUTATÁSA----*/}
       <View style={{flex:1}}>
       <FlatList
@@ -215,38 +240,35 @@ export default class Listaad extends Component {
                  )}
                 />
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={this.adatatad}>
-        <Text style={styles.gomb}>Lista mentése</Text>
-      </TouchableOpacity>
+     
       </View>
     );
   }
 }
 const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   liladoboz:{
     borderColor:"purple",
     borderWidth:1,
     margin:10,
     padding:10,
-    borderRadius:5
+    borderRadius:5,
+    
   },
   gomb:
   {
+    width:width*0.4,
     textAlign:"center",
     alignSelf:"center",
-    width:300,
     backgroundColor:"lightblue",
     borderColor:"black",
     borderWidth:2,
     borderRadius:5,
     
   },
-  button:{
-    margin:5
-  },
+  
+  
   child:{width:width,alignSelf:"center",alignItems:"center",alignContent:"center"},
   text:{textAlign:"center",fontSize:18},
   listaneve:{
@@ -255,8 +277,15 @@ const styles = StyleSheet.create({
     borderColor:"black",
     borderWidth:1,
     borderRadius:5,
-    width:300,
-    
+    width:width*0.8
+  },
+  mentes:{
+    textAlign:"center",
+    borderColor:"black",
+    borderWidth:1,
+    borderRadius:5,
+    width:width*0.2,
+    height: 40,
   }
 
 
