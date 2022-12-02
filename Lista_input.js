@@ -30,13 +30,12 @@ export default class Listaad extends Component {
   adatatad=()=>{
     let tartalom =[]
     this.state.data.map((item)=>tartalom.push(item.megnevezes))
-<<<<<<< HEAD
-    alert(tartalom)
 
     
-=======
-    //alert(tartalom)
->>>>>>> 6cead7ebae2f848aee14bcd0e68c0a6185e5f78b
+
+    
+
+
     if(this.state.listanev.length==0)
     {
       this.state.listanev=this.getCurrentDate();
