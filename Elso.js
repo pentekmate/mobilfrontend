@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, FlatList, Text, Image, TouchableOpacity, StyleSheet, View,RefreshControl, SafeAreaView, ScrollView, } from 'react-native';
+import {Text, TouchableOpacity, StyleSheet, View,RefreshControl, SafeAreaView, ScrollView, } from 'react-native';
 
 
 export default class App extends Component {
@@ -9,6 +9,7 @@ export default class App extends Component {
         this.state = {
             data: [],
             isLoading: true,
+
             refreshing:false,
             setRefreshing:false
         };
@@ -26,7 +27,7 @@ export default class App extends Component {
 
     async getLista() {
         try {
-            const response = await fetch('http://pentek-mate-miklos.dszcbaross.tk/listak');
+            const response = await fetch('http://192.168.6.19:3000/listak');
             const json = await response.json();
             this.setState({ data: json });
         } catch (error) {

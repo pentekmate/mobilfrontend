@@ -1,8 +1,9 @@
 import React, { Component} from 'react';
-import { Button, StyleSheet, View, FlatList, Text, TouchableOpacity, TextInput,Pressable,Dimensions } from 'react-native';
+import {Alert, Button, StyleSheet, View, FlatList, Text, TouchableOpacity, TextInput,Pressable,Dimensions,SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import DialogInput from 'react-native-dialog-input';
 
 
 
@@ -15,7 +16,10 @@ export default class Listaad extends Component {
       data: [],
       listaelem:"",
       listanev:"",
-      termekektomb:[{id:1,megnevezes:"Cukor",isChecked:false},{id:2,megnevezes:"Liszt",isChecked:false},{id:3,megnevezes:"Kenyér",isChecked:false},{id:4,megnevezes:"Kávé",isChecked:false}]
+      termekektomb:[{id:1,megnevezes:"Cukor",isChecked:false},{id:2,megnevezes:"Liszt",isChecked:false},{id:3,megnevezes:"Kenyér",isChecked:false},{id:4,megnevezes:"Kávé",isChecked:false}],
+      visible:false,
+      setVisible:false,
+      bevittadat:'',
     };
   }
    getCurrentDate=()=>{
@@ -30,12 +34,6 @@ export default class Listaad extends Component {
   adatatad=()=>{
     let tartalom =[]
     this.state.data.map((item)=>tartalom.push(item.megnevezes))
-
-    
-
-    
-
-
     if(this.state.listanev.length==0)
     {
       this.state.listanev=this.getCurrentDate();
@@ -49,7 +47,7 @@ export default class Listaad extends Component {
         bevitel1:this.state.listanev,
         bevitel2:tartalom
       }
-      const response = fetch('http://pentek-mate-miklos.dszcbaross.tk/tartalomfel',{
+      const response = fetch('http://192.168.6.19:3000/tartalomfel',{
         method: "POST",
         body: JSON.stringify(adatok),
         headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -152,7 +150,7 @@ export default class Listaad extends Component {
   render() {
     return (
      
-      <View style={{flex:1,flexDirection:"column",marginTop:10}}>
+      <SafeAreaView style={{flex:1,flexDirection:"column",marginTop:10}}>
          {/*----------------------------LISTAELNEVEZÉSE,MENTÉSE-------------------- */}
         <View style={{flex:1}}>
         <View style={{flexDirection:"row"}}>
@@ -169,13 +167,32 @@ export default class Listaad extends Component {
         <View style={{flex:2,backgroundColor:"yellow"}}>
                 <TouchableOpacity
                 onPress={this.adatatad}>
-                <Text style={styles.mentes}>Lista mentése</Text>
+                <Text style={styles.mentes}>Mentés</Text>
                 </TouchableOpacity>  
         </View>   
         </View>
         </View>
+        <View style={{flex:1}}>
+
+        <DialogInput 
+                isDialogVisible={this.state.visible}
+                message={"Nevezed el a listádat!"}
+                hintInput ={""}
+                submitInput={ (text) => {
+                    this.setState({listaneve:text}),
+                    this.state.visible=false;
+                }}
+                closeDialog={() => this.setState({visible:false})}>
+              
+               
+            </DialogInput>
+            <Button onPress={() =>this.setState({visible:true})} title="Nyomjámeg"></Button>
+        </View>
+        
+      
              {/*----LISTÁBA TÖLTÉS INPUTTAL---*/}
       <View style={{flex:1,backgroundColor:"lime"}}>
+     
       <View style={{width:300,borderWidth:1,borderColor:"purple",borderRadius:5,alignSelf:"center"}} >
       <TextInput
         style={{height: 40}}
@@ -224,9 +241,6 @@ export default class Listaad extends Component {
      />
     
      </View> 
-        
-    
-  
       {/*----lISTA ELEMEINEK MUTATÁSA----*/}
       <View style={{flex:1}}>
       <FlatList
@@ -240,7 +254,7 @@ export default class Listaad extends Component {
                 />
       </View>
      
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -285,6 +299,7 @@ const styles = StyleSheet.create({
     borderRadius:5,
     width:width*0.2,
     height: 40,
+    textAlignVertical:"center"
   }
 
 
