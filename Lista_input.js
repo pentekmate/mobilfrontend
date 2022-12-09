@@ -59,7 +59,7 @@ export default class Listaad extends Component {
       bevitel2: tartalom,
     };
     try {
-      const response = fetch("http://192.168.6.19:3000/tartalomfel", {
+      const response = fetch('http://pentek-mate-miklos.dszcbaross.tk/tartalomfel', {
         method: "POST",
         body: JSON.stringify(adatok),
         headers: { "Content-type": "application/json; charset=UTF-8" },
