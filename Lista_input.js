@@ -88,7 +88,7 @@ export default class Listaad extends Component {
 
   componentDidMount() {
     this.getData().then((vissza_adatok2) => {
-      console.log(vissza_adatok2);
+      
       this.setState({ data: vissza_adatok2 });
     });
   }
