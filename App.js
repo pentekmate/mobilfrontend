@@ -59,7 +59,7 @@ export default function App() {
           component={Root}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Listainputsr" component={Listainputsr} />
+        <Stack.Screen name="Listalétrehozása" component={Listainputsr} />
       </Stack.Navigator>
     </NavigationContainer>
   );

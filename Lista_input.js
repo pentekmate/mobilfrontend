@@ -9,10 +9,12 @@ import {
   Pressable,
   Dimensions,
   SafeAreaView,
+  Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
+import { Entypo } from '@expo/vector-icons'; 
 
 export default class Listaad extends Component {
   constructor(props) {
@@ -20,426 +22,21 @@ export default class Listaad extends Component {
 
     this.state = {
       data: [],
-      listaelem: "",
       listanev: "",
       termekektomb: [
         { id: 1, megnevezes: "Cukor", isChecked: false },
         { id: 2, megnevezes: "Liszt", isChecked: false },
         { id: 3, megnevezes: "Kenyér", isChecked: false },
         { id: 4, megnevezes: "Kávé", isChecked: false },
+        { id: 6, megnevezes: "Cola", isChecked: false },
+        { id: 7, megnevezes: "Wc-papír", isChecked: false },
+        { id: 8, megnevezes: "Szalvéta", isChecked: false },
+        { id: 9, megnevezes: "Tej", isChecked: false },
+        { id: 10, megnevezes: "Mosószer", isChecked: false },
       ],
       visible: false,
       setVisible: false,
       bevittadat: "",
-      filteredDataSource: ["Articsóka",
-        "Bimbós kel",
-        "Brokkoli",
-        "Burgonya (nyári)",
-        "Burgonya (téli)",
-        "Céklarépa",
-        "Cikória",
-        "Csicsóka",
-        "Cukkini",
-        "Édes kömény",
-        "Endívia saláta",
-        "Fejes saláta",
-        "Fekete retek",
-        "Fokhagyma",
-        "Halványító zeller",
-        "Jégcsapsaláta",
-        "Káposzta",
-        "Káposzta, savanyított",
-        "Karalábé",
-        "Karfiol",
-        "Kelkáposzta",
-        "Kínai kel",
-        "Kukorica, tejes",
-        "Mangold",
-        "Olívabogyó",
-        "Padlizsán",
-        "Paradicsom",
-        "Paraj (spenót)",
-        "Pasztinák",
-        "Patisszon",
-        "Petrezselyem zöldje",
-        "Petrezselyemgyökér",
-        "Póréhagyma",
-        "Rebarbara",
-        "Retek, hónapos",
-        "Sárgarépa",
-        "Sóska",
-        "Spárga",
-        "Sütőtök",
-        "Torma",
-        "Tök, főző",
-        "Uborka",
-        "Újhagyma",
-        "Vöröshagyma",
-        "Zellergumó",
-        "Zöldbab",
-        "Zöldborsó",
-        "Zöldpaprika",
-        "Név",
-        "Alma",
-        "Ananász",
-        "Banán",
-        "Birsalma",
-        "Citrom",
-        "Cseresznye",
-        "Csipkebogyó, friss",
-        "Cukordinnye/sárgadinnye",
-        "Datolya",
-        "Egres",
-        "Eper, fa",
-        "Füge, friss",
-        "Füge, szárított",
-        "Gránátalma",
-        "Grapefruit",
-        "Görögdinnye",
-        "Kajszibarack",
-        "Kivi",
-        "Körte",
-        "Licsi",
-        "Málna",
-        "Mandarin",
-        "Mangó",
-        "Mazsola",
-        "Meggy",
-        "Mirabella",
-        "Narancs",
-        "Naspolya",
-        "Nektarin",
-        "Őszibarack",
-        "Papaya",
-        "Ribiszke, fekete",
-        "Ribiszke, piros",
-        "Szamóca, földieper",
-        "Szeder",
-        "Szilva, besztercei",
-        "Szilva, vörös",
-        "Szőlő",
-        "Zöldringló", "Aludttej",
-        "Bivalytej",
-        "Brick sajt",
-        "Brie sajt",
-        "Camembert sajt",
-        "Cheddar sajt",
-        "Cheshire sajt",
-        "Colby sajt",
-        "Edámi sajt",
-        "Ementáli sajt",
-        "Fagylalt",
-        "Feta sajt",
-        "Fontina sajt",
-        "Főzőtejszín 10%-os",
-        "Főzőtejszín 20%-os",
-        "Gomolya sajt",
-        "Gomolyatúró",
-        "Gorgonzola sajt",
-        "Gouda sajt",
-        "Görög joghurt",
-        "Gruyere sajt",
-        "Habtejszín 30%-os",
-        "Halloumi sajt",
-        "Havarti sajt",
-        "Író",
-        "Jégkrém",
-        "Joghurt",
-        "Juhsajt",
-        "Juhtej",
-        "Juhtúró",
-        "Kávétejszín",
-        "Kecskesajt",
-        "Kecsketej",
-        "Kefir",
-        "Kéksajt",
-        "Köményes sajt",
-        "Körözött",
-        "Krémsajt",
-        "Krémtúró",
-        "Limburger sajt",
-        "Márványsajt",
-        "Mascarpone sajt",
-        "Monterey sajt",
-        "Mozzarella sajt",
-        "Muenster sajt",
-        "Neufchatel sajt",
-        "Óvári sajt",
-        "Pálpusztai sajt",
-        "Parenyica sajt",
-        "Parmezán sajt",
-        "Provolone sajt",
-        "Puding",
-        "Ricotta sajt",
-        "Rokfort sajt",
-        "Romano sajt",
-        "Sűrített tej",
-        "Tehéntej (0,1%-os)",
-        "Tehéntej (1,5%-os)",
-        "Tehéntej (2,8%-os)",
-        "Tehéntej (3,5%-os)",
-        "Tehéntej (3,6%-os)",
-        "Tehéntúró (félzsíros)",
-        "Tehéntúró (sovány)",
-        "Tejföl (12%-os)",
-        "Tejföl (20%-os)",
-        "Tejpor (sovány)",
-        "Tejpor (zsíros)",
-        "Tejszínhab",
-        "Tilsiti sajt",
-        "Trappista sajt",
-        "Túró Rudi",
-        "Vaj",
-        "Vajkrém", "Abonett",
-        "Alföldi kenyér",
-        "Bakonyi barna kenyér",
-        "Briós",
-        "Burgonyás kenyér",
-        "Búzacsírás kenyér",
-        "Búzakorpás kenyér",
-        "Diós csiga",
-        "Erzsébet kenyér",
-        "Fánk",
-        "Fehér kenyér",
-        "Félbarna kenyér",
-        "Francia kenyér",
-        "Gofri",
-        "Graham kenyér",
-        "Kakaós csiga",
-        "Kalács",
-        "Kétszersült",
-        "Kifli",
-        "Kuglóf",
-        "Kukoricás kenyér",
-        "Lekváros bukta",
-        "Lenmagos barnakenyér",
-        "Magos kenyér",
-        "Magvas barnakenyér",
-        "Mazsolás kenyér",
-        "Muffin",
-        "Olasz kenyér",
-        "Palacsinta",
-        "Pirítós",
-        "Piskótatekercs",
-        "Pita (fehér lisztből)",
-        "Pita (teljes kiőrlésű)",
-        "Pogácsa (tepertős)",
-        "Pogácsa (vajas)",
-        "Pumpernickel",
-        "Rozskenyér",
-        "Teljes kiőrlésű kenyér",
-        "Teljes kiőrlésű kifli",
-        "Teljes kiőrlésű zsemle",
-        "Tökmagos kenyér",
-        "Túrós batyu",
-        "Zabkorpás kenyér",
-        "Zsemle",
-      ],
-      masterDataSource: ["Articsóka",
-        "Bimbós kel",
-        "Brokkoli",
-        "Burgonya (nyári)",
-        "Burgonya (téli)",
-        "Céklarépa",
-        "Cikória",
-        "Csicsóka",
-        "Cukkini",
-        "Édes kömény",
-        "Endívia saláta",
-        "Fejes saláta",
-        "Fekete retek",
-        "Fokhagyma",
-        "Halványító zeller",
-        "Jégcsapsaláta",
-        "Káposzta",
-        "Káposzta, savanyított",
-        "Karalábé",
-        "Karfiol",
-        "Kelkáposzta",
-        "Kínai kel",
-        "Kukorica, tejes",
-        "Mangold",
-        "Olívabogyó",
-        "Padlizsán",
-        "Paradicsom",
-        "Paraj (spenót)",
-        "Pasztinák",
-        "Patisszon",
-        "Petrezselyem zöldje",
-        "Petrezselyemgyökér",
-        "Póréhagyma",
-        "Rebarbara",
-        "Retek, hónapos",
-        "Sárgarépa",
-        "Sóska",
-        "Spárga",
-        "Sütőtök",
-        "Torma",
-        "Tök, főző",
-        "Uborka",
-        "Újhagyma",
-        "Vöröshagyma",
-        "Zellergumó",
-        "Zöldbab",
-        "Zöldborsó",
-        "Zöldpaprika",
-        "Név",
-        "Alma",
-        "Ananász",
-        "Banán",
-        "Birsalma",
-        "Citrom",
-        "Cseresznye",
-        "Csipkebogyó, friss",
-        "Cukordinnye/sárgadinnye",
-        "Datolya",
-        "Egres",
-        "Eper, fa",
-        "Füge, friss",
-        "Füge, szárított",
-        "Gránátalma",
-        "Grapefruit",
-        "Görögdinnye",
-        "Kajszibarack",
-        "Kivi",
-        "Körte",
-        "Licsi",
-        "Málna",
-        "Mandarin",
-        "Mangó",
-        "Mazsola",
-        "Meggy",
-        "Mirabella",
-        "Narancs",
-        "Naspolya",
-        "Nektarin",
-        "Őszibarack",
-        "Papaya",
-        "Ribiszke, fekete",
-        "Ribiszke, piros",
-        "Szamóca, földieper",
-        "Szeder",
-        "Szilva, besztercei",
-        "Szilva, vörös",
-        "Szőlő",
-        "Zöldringló", "Aludttej",
-        "Bivalytej",
-        "Brick sajt",
-        "Brie sajt",
-        "Camembert sajt",
-        "Cheddar sajt",
-        "Cheshire sajt",
-        "Colby sajt",
-        "Edámi sajt",
-        "Ementáli sajt",
-        "Fagylalt",
-        "Feta sajt",
-        "Fontina sajt",
-        "Főzőtejszín 10%-os",
-        "Főzőtejszín 20%-os",
-        "Gomolya sajt",
-        "Gomolyatúró",
-        "Gorgonzola sajt",
-        "Gouda sajt",
-        "Görög joghurt",
-        "Gruyere sajt",
-        "Habtejszín 30%-os",
-        "Halloumi sajt",
-        "Havarti sajt",
-        "Író",
-        "Jégkrém",
-        "Joghurt",
-        "Juhsajt",
-        "Juhtej",
-        "Juhtúró",
-        "Kávétejszín",
-        "Kecskesajt",
-        "Kecsketej",
-        "Kefir",
-        "Kéksajt",
-        "Köményes sajt",
-        "Körözött",
-        "Krémsajt",
-        "Krémtúró",
-        "Limburger sajt",
-        "Márványsajt",
-        "Mascarpone sajt",
-        "Monterey sajt",
-        "Mozzarella sajt",
-        "Muenster sajt",
-        "Neufchatel sajt",
-        "Óvári sajt",
-        "Pálpusztai sajt",
-        "Parenyica sajt",
-        "Parmezán sajt",
-        "Provolone sajt",
-        "Puding",
-        "Ricotta sajt",
-        "Rokfort sajt",
-        "Romano sajt",
-        "Sűrített tej",
-        "Tehéntej (0,1%-os)",
-        "Tehéntej (1,5%-os)",
-        "Tehéntej (2,8%-os)",
-        "Tehéntej (3,5%-os)",
-        "Tehéntej (3,6%-os)",
-        "Tehéntúró (félzsíros)",
-        "Tehéntúró (sovány)",
-        "Tejföl (12%-os)",
-        "Tejföl (20%-os)",
-        "Tejpor (sovány)",
-        "Tejpor (zsíros)",
-        "Tejszínhab",
-        "Tilsiti sajt",
-        "Trappista sajt",
-        "Túró Rudi",
-        "Vaj",
-        "Vajkrém", "Abonett",
-        "Alföldi kenyér",
-        "Bakonyi barna kenyér",
-        "Briós",
-        "Burgonyás kenyér",
-        "Búzacsírás kenyér",
-        "Búzakorpás kenyér",
-        "Diós csiga",
-        "Erzsébet kenyér",
-        "Fánk",
-        "Fehér kenyér",
-        "Félbarna kenyér",
-        "Francia kenyér",
-        "Gofri",
-        "Graham kenyér",
-        "Kakaós csiga",
-        "Kalács",
-        "Kétszersült",
-        "Kifli",
-        "Kuglóf",
-        "Kukoricás kenyér",
-        "Lekváros bukta",
-        "Lenmagos barnakenyér",
-        "Magos kenyér",
-        "Magvas barnakenyér",
-        "Mazsolás kenyér",
-        "Muffin",
-        "Olasz kenyér",
-        "Palacsinta",
-        "Pirítós",
-        "Piskótatekercs",
-        "Pita (fehér lisztből)",
-        "Pita (teljes kiőrlésű)",
-        "Pogácsa (tepertős)",
-        "Pogácsa (vajas)",
-        "Pumpernickel",
-        "Rozskenyér",
-        "Teljes kiőrlésű kenyér",
-        "Teljes kiőrlésű kifli",
-        "Teljes kiőrlésű zsemle",
-        "Tökmagos kenyér",
-        "Túrós batyu",
-        "Zabkorpás kenyér",
-        "Zsemle",
-      ],
-      latszodik: false
     };
   }
 
@@ -491,32 +88,22 @@ export default class Listaad extends Component {
       // error reading value
     }
   }
-
-
-
+  storeData = async (value) => {
+    try {
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem('@listaelemek', jsonValue)
+    } catch (e) {
+        // saving error
+    }
+}
   componentDidMount() {
+   
     this.getData().then((vissza_adatok2) => {
-
-      this.setState({ data: vissza_adatok2 });
+      //console.log(vissza_adatok2) 
+      this.setState({data:vissza_adatok2})
     });
   }
-  /* felvitel = () => {
-     var x = this.state.data.length;
- 
-     let uj = [];
-     if (this.state.listaelem != null) {
-       uj = this.state.data;
-     }
-     uj.push({
-       id: x,
-       megnevezes: this.state.listaelem,
-       isChecked: false,
-     });
- 
-     this.setState({ data: uj });
-     this.storeData(uj);
-     this.state.listaelem = "";
-   };*/
+
   mindentorles = () => {
     this.setState({ data: [] });
     this.storeData([]);
@@ -525,7 +112,6 @@ export default class Listaad extends Component {
       product.isChecked = false;
     });
     this.state.listanev = "";
-    this.state.listaelem = "";
   };
 
   handleChange = (id) => {
@@ -540,42 +126,59 @@ export default class Listaad extends Component {
     let uj = [];
 
     this.setState({ termekektomb: temp });
-    let nev = this.state.termekektomb.map((product) => {
-      if (id === product.id && product.isChecked == false) {
-        if (this.state.listaelem != null) {
-          uj = this.state.data;
-        }
-        uj.push({
+
+    x=this.state.data.length
+    this.state.termekektomb.map((termek) => {
+      if (id === termek.id && termek.isChecked == false) {
+        this.state.data.push({
           id: x,
-          megnevezes: product.megnevezes,
+          megnevezes: termek.megnevezes,
           isChecked: false,
         });
-
-        this.setState({ data: uj });
-        this.storeData(uj);
       }
     });
+    
   };
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, flexDirection: "column", marginTop: 10 }}>
+      <SafeAreaView style={{ flex: 1, flexDirection: "column"}}>
         {/*----------------------------LISTAELNEVEZÉSE,MENTÉSE-------------------- */}
 
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ flex: 4, backgroundColor: "yellow" }}>
+        <View style={{ flexDirection: "row",backgroundColor:"#2c3531",flex:1}}>
+          <View style={{ flex: 1, backgroundColor: "#2c3531" }}>
             <TouchableOpacity
               onPress={this.mindentorles}>
-              <Text style={styles.mentes}>Minden törlése</Text>
+              <Text style={styles.mentes}>Törlés</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 1, backgroundColor: "yellow" }}>
+
+          <View style={{flex:4,alignItems:"center"}}>
+              <View style={{ flexDirection: "row",backgroundColor:"#2c3531",flex:1,}}>
+              <View style={{flex:1,backgroundColor:"696969",justifyContent:"center"}}>
+                <View style={styles.image}>
+                    <Image
+                      source={require('./feher-removebg-preview.png')}
+                      style={{width:20,height:20,left:-5}}
+                      />
+                    </View>
+                  </View>
+                    <View style={{backgroundColor:"#116466",flex:9,justifyContent:"center",borderRadius:15}}>
+                      <TouchableOpacity
+                        onPress={()=>this.props.navigation.navigate('Listalétrehozása')}
+                        style={styles.textInputStyle} >
+                        <Text style={{fontStyle:"italic",color: "#f5fffa"}}>Termék keresése..</Text>
+                      </TouchableOpacity>
+                    </View>
+                </View>
+          </View>
+          <View style={{ flex: 1, backgroundColor: "#2c3531" }}>
             <TouchableOpacity onPress={this.adatatad}>
               <Text style={styles.mentes}>Mentés</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <View>
+        <View style={{backgroundColor:"brown"}}>
           <DialogInput
             isDialogVisible={this.state.visible}
             message={"Nevezed el a listádat!"}
@@ -585,67 +188,59 @@ export default class Listaad extends Component {
             closeDialog={() => this.setState({ visible: false })}
           ></DialogInput>
         </View>
-
-        {/*----LISTÁBA TÖLTÉS INPUTTAL---*/}
-        <View style={{ flex: 1 }}>
-          <View style={styles.input}>
-            <TouchableOpacity
-              style={styles.button}
-
-              onPress={() => this.props.navigation.navigate('Listainputsr')}>
-
-              <Text style={{ color: 'white', fontSize: 30 }}>Átugrik</Text>
-
-
-            </TouchableOpacity>
-
-
-          </View>
-          <View style={{ flexDirection: "row" }}>
-
-          </View>
-        </View>
         {/*----FELSŐ CHECKBOX ELEMEI----*/}
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 9,backgroundColor:"#2c3531" }}>
+        
           <FlatList
+            //horizontal={true} 
+            numColumns={2}
+            showsHorizontalScrollIndicator={false}
+            getItemCount={this.get}
+            style={{marginTop:100}}
             index={0}
             data={this.state.termekektomb}
             renderItem={({ item }) => (
               <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  width: width * 0.5,
-                  margin: 5,
-                }}
+                style={styles.felsocheck}
               >
+                <View style={styles.icon}>
                 <Pressable onPress={() => this.handleChange(item.id)}>
                   <MaterialCommunityIcons
                     name={
                       item.isChecked
-                        ? "checkbox-marked"
-                        : "checkbox-blank-outline"
+                        ? "check"
+                        : "plus"
                     }
                     size={24}
-                    color="#000"
+                    color="#black"
                   />
                 </Pressable>
-                <Text>{item.megnevezes}</Text>
+                </View>
+                <Text style={{color: "#f5fffa",fontSize:15}}>{item.megnevezes}</Text>
               </View>
             )}
           />
+          
         </View>
         {/*----lISTA ELEMEINEK MUTATÁSA----*/}
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 9 ,backgroundColor:"#2c3531", paddingTop:height*0.1}}>
           <FlatList
             data={this.state.data}
             keyExtractor={({ id }, index) => id}
             renderItem={({ item }) => (
-              <View style={styles.liladoboz}>
-                <Text>
-                  {item.id},{item.megnevezes}
-                </Text>
-              </View>
+              <View style={styles.listatartalom}>
+              
+                        <View style={{ flexDirection: "row",flex:1}}>
+                          <View style={{flex:1,justifyContent:"center"}}>
+                          <Entypo style={{marginLeft:10}} name="shop" size={25} color="#f5fffa" />
+                          </View> 
+                        <View style={{flex:13,justifyContent:"center"}}>
+                         <Text style={{color:"#f5fffa",marginLeft:10}}>{item.megnevezes}</Text>
+                        </View>
+                        </View>
+                  </View>
+             
+            
             )}
           />
         </View>
@@ -653,31 +248,18 @@ export default class Listaad extends Component {
     );
   }
 }
-const { width } = Dimensions.get("window");
+const { width,height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  liladoboz: {
-    borderColor: "purple",
-    borderWidth: 1,
-    margin: 10,
-    padding: 10,
-    borderRadius: 5,
-  },
-  gomb: {
-    width: width * 0.4,
-    textAlign: "center",
-    alignSelf: "center",
-    backgroundColor: "lightblue",
-    borderColor: "black",
-    borderWidth: 2,
-    borderRadius: 5,
-  },
+  listatartalom:{
+    backgroundColor:"#116466",
+    height:height*0.05,
+    width:width*1,
+    alignSelf:"center",
+    borderRadius:15,
+    margin:10
+   
 
-  child: {
-    width: width,
-    alignSelf: "center",
-    alignItems: "center",
-    alignContent: "center",
   },
   text: { textAlign: "center", fontSize: 18 },
   listaneve: {
@@ -690,19 +272,43 @@ const styles = StyleSheet.create({
   },
   mentes: {
     textAlign: "center",
-    borderColor: "black",
     borderWidth: 1,
     borderRadius: 5,
-    width: width * 0.2,
-    height: 40,
+   // width: width * 0.2,
     textAlignVertical: "center",
   },
-  input: {
-    margin: 20,
-    width: width * 1,
-    borderWidth: 1,
-    borderColor: "purple",
-    borderRadius: 5,
-    alignSelf: "center",
-  },
+  textInputStyle: {
+    textAlignVertical:"top",
+    borderRadius:15,
+    textAlignVertical:"auto",
+    width:width*1
+},
+image:{
+  backgroundColor:"#808080",
+  width:30,
+  height:55,
+  justifyContent:"center",
+  alignSelf:"flex-end",
+  right:-10,
+  alignItems:"center",
+  borderRadius:15
+
+}
+,felsocheck:{
+  backgroundColor:"red",
+  flexDirection: "row",
+  width:width*0.5,
+  margin: 5,
+  backgroundColor:"#116466",
+  height:50,
+  borderRadius:15,
+  alignItems:"center",
+  color: "#f5fffa"
+},
+icon:{
+  backgroundColor:"#ffcb9a",
+  borderRadius:50,
+  margin:5,
+  marginRight:10
+}
 });
