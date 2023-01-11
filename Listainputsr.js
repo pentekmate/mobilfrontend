@@ -440,8 +440,7 @@ export default class ButtonBasics extends Component {
        
         this.state.tomb.push({
                 id:x,
-                megnevezes:item,
-                isChecked:false
+                megnevezes:item
         })
         
         this.state.listaelem = "";
@@ -502,7 +501,7 @@ export default class ButtonBasics extends Component {
             this.storeData(this.state.tomb)}
             catch(err){}
             finally{
-                //alert("Sikeres felvitel")
+                console.log("Sikeres felvitel")
         }
         
     }

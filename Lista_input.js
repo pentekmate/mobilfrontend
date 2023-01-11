@@ -14,7 +14,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons';
+
 
 export default class Listaad extends Component {
   constructor(props) {
@@ -30,15 +31,14 @@ export default class Listaad extends Component {
         { id: 4, megnevezes: "Kávé", isChecked: false },
         { id: 6, megnevezes: "Cola", isChecked: false },
         { id: 7, megnevezes: "Wc-papír", isChecked: false },
-        { id: 8, megnevezes: "Szalvéta", isChecked: false },
-        { id: 9, megnevezes: "Tej", isChecked: false },
-        { id: 10, megnevezes: "Mosószer", isChecked: false },
       ],
       visible: false,
       setVisible: false,
       bevittadat: "",
     };
   }
+
+
 
   getCurrentDate = () => {
     var date = new Date().getDate();
@@ -96,13 +96,20 @@ export default class Listaad extends Component {
         // saving error
     }
 }
+
   componentDidMount() {
-   
+  this.navFocusListener = this.props.navigation.addListener('focus', () => {   
     this.getData().then((vissza_adatok2) => {
       //console.log(vissza_adatok2) 
       this.setState({data:vissza_adatok2})
+      console.log(this.state.data)
     });
+  });
+ 
   }
+  componentWillUnmount() {
+    this.navFocusListener();
+   }
 
   mindentorles = () => {
     this.setState({ data: [] });
@@ -113,6 +120,7 @@ export default class Listaad extends Component {
     });
     this.state.listanev = "";
   };
+  
 
   handleChange = (id) => {
     let temp = this.state.termekektomb.map((product) => {
@@ -123,8 +131,6 @@ export default class Listaad extends Component {
       return product;
     });
     let x = this.state.data.length;
-    let uj = [];
-
     this.setState({ termekektomb: temp });
 
     x=this.state.data.length
@@ -135,6 +141,16 @@ export default class Listaad extends Component {
           megnevezes: termek.megnevezes,
           isChecked: false,
         });
+      }
+      if(id==termek.id && termek.isChecked==true)
+      {
+       
+     
+       
+       console.log(this.state.data)
+        this.state.data.map((termeknevek)=>{
+        
+        })
       }
     });
     

@@ -30,6 +30,7 @@ function NotificationsScreen({ navigation }) {
 function Elso_lap({ navigation }) {
   return (
     <Listaad navigation={navigation}></Listaad>
+    
   );
 }
 
