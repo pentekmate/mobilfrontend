@@ -24,13 +24,14 @@ export default class Listaad extends Component {
     this.state = {
       data: [],
       listanev: "",
+      vissza_adatok2: [],
       termekektomb: [
-        { id: 1, megnevezes: "Cukor", isChecked: false },
-        { id: 2, megnevezes: "Liszt", isChecked: false },
-        { id: 3, megnevezes: "Kenyér", isChecked: false },
-        { id: 4, megnevezes: "Kávé", isChecked: false },
-        { id: 6, megnevezes: "Cola", isChecked: false },
-        { id: 7, megnevezes: "Wc-papír", isChecked: false },
+        { id: 0, megnevezes: "Cukor", isChecked: false },
+        { id: 1, megnevezes: "Liszt", isChecked: false },
+        { id: 2, megnevezes: "Kenyér", isChecked: false },
+        { id: 3, megnevezes: "Kávé", isChecked: false },
+        { id: 4, megnevezes: "Cola", isChecked: false },
+        { id: 5, megnevezes: "Wc-papír", isChecked: false },
       ],
       visible: false,
       setVisible: false,
@@ -90,26 +91,26 @@ export default class Listaad extends Component {
   }
   storeData = async (value) => {
     try {
-        const jsonValue = JSON.stringify(value)
-        await AsyncStorage.setItem('@listaelemek', jsonValue)
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('@listaelemek', jsonValue)
     } catch (e) {
-        // saving error
+      // saving error
     }
-}
+  }
 
   componentDidMount() {
-  this.navFocusListener = this.props.navigation.addListener('focus', () => {   
-    this.getData().then((vissza_adatok2) => {
-      //console.log(vissza_adatok2) 
-      this.setState({data:vissza_adatok2})
-      console.log(this.state.data)
+    this.navFocusListener = this.props.navigation.addListener('focus', () => {
+      this.getData().then((vissza_adatok2) => {
+        this.setState({ data: vissza_adatok2 })
+        //console.log(this.state.vissza_adatok2)
+        console.log(this.state.data)
+      });
     });
-  });
- 
+
   }
   componentWillUnmount() {
     this.navFocusListener();
-   }
+  }
 
   mindentorles = () => {
     this.setState({ data: [] });
@@ -120,9 +121,10 @@ export default class Listaad extends Component {
     });
     this.state.listanev = "";
   };
-  
 
-  handleChange = (id) => {
+
+  handleChange = (id, nev) => {
+    var tomb = this.state.data;
     let temp = this.state.termekektomb.map((product) => {
       if (id === product.id) {
         return { ...product, isChecked: !product.isChecked };
@@ -133,7 +135,7 @@ export default class Listaad extends Component {
     let x = this.state.data.length;
     this.setState({ termekektomb: temp });
 
-    x=this.state.data.length
+    x = this.state.data.length
     this.state.termekektomb.map((termek) => {
       if (id === termek.id && termek.isChecked == false) {
         this.state.data.push({
@@ -142,25 +144,61 @@ export default class Listaad extends Component {
           isChecked: false,
         });
       }
-      if(id==termek.id && termek.isChecked==true)
-      {
-       
-     
-       
-       console.log(this.state.data)
-        this.state.data.map((termeknevek)=>{
-        
-        })
+      if (nev == termek.megnevezes && termek.isChecked == true) {
+        let index = this.state.data.indexOf(termek.megnevezes) + 1
+        if (index !== -1) {
+          tomb.splice(index, 1);
+          this.setState({ data: tomb });
+          console.log(this.state.data)
+        }
       }
     });
-    
+
+
+
   };
+  ListaelemTorles = (termeknev) => {
+    //alert(id)
+    //console.log(this.state.termekektomb)
+    console.log(this.state.data)
+    let tomb = this.state.data
+    let tomb1 = this.state.termekektomb
+
+    this.state.termekektomb.map((termekvissza) => {
+      if (termeknev == termekvissza.megnevezes) {
+        termekvissza.isChecked = false
+        this.setState({ termekektomb: tomb1 })
+        //this.setState({ data: tomb1 });
+      }
+    })
+    this.state.termekektomb.map((termek) => {
+      if (termeknev == termek.megnevezes) {
+
+        let index = this.state.data.indexOf(termek.megnevezes) + 1
+        if (index !== -1) {
+          tomb.splice(index, 1);
+          this.setState({ data: tomb });
+        }
+      }
+    })
+    this.state.data.map((termek) => {
+      if (termeknev == termek.megnevezes) {
+        let index = this.state.data.indexOf(termek.megnevezes) + 1
+        if (index !== -1) {
+          tomb.splice(index, 1);
+          this.setState({ data: tomb });
+
+        }
+      }
+    })
+
+  }
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, flexDirection: "column"}}>
+      <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
         {/*----------------------------LISTAELNEVEZÉSE,MENTÉSE-------------------- */}
 
-        <View style={{ flexDirection: "row",backgroundColor:"#2c3531",flex:1}}>
+        <View style={{ flexDirection: "row", backgroundColor: "#2c3531", flex: 1 }}>
           <View style={{ flex: 1, backgroundColor: "#2c3531" }}>
             <TouchableOpacity
               onPress={this.mindentorles}>
@@ -168,24 +206,24 @@ export default class Listaad extends Component {
             </TouchableOpacity>
           </View>
 
-          <View style={{flex:4,alignItems:"center"}}>
-              <View style={{ flexDirection: "row",backgroundColor:"#2c3531",flex:1,}}>
-              <View style={{flex:1,backgroundColor:"696969",justifyContent:"center"}}>
+          <View style={{ flex: 4, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", backgroundColor: "#2c3531", flex: 1, }}>
+              <View style={{ flex: 1, backgroundColor: "696969", justifyContent: "center" }}>
                 <View style={styles.image}>
-                    <Image
-                      source={require('./feher-removebg-preview.png')}
-                      style={{width:20,height:20,left:-5}}
-                      />
-                    </View>
-                  </View>
-                    <View style={{backgroundColor:"#116466",flex:9,justifyContent:"center",borderRadius:15}}>
-                      <TouchableOpacity
-                        onPress={()=>this.props.navigation.navigate('Listalétrehozása')}
-                        style={styles.textInputStyle} >
-                        <Text style={{fontStyle:"italic",color: "#f5fffa"}}>Termék keresése..</Text>
-                      </TouchableOpacity>
-                    </View>
+                  <Image
+                    source={require('./feher-removebg-preview.png')}
+                    style={{ width: 20, height: 20, left: -5 }}
+                  />
                 </View>
+              </View>
+              <View style={{ backgroundColor: "#116466", flex: 9, justifyContent: "center", borderRadius: 15 }}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('Listalétrehozása')}
+                  style={styles.textInputStyle} >
+                  <Text style={{ fontStyle: "italic", color: "#f5fffa" }}>Termék keresése..</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
           <View style={{ flex: 1, backgroundColor: "#2c3531" }}>
             <TouchableOpacity onPress={this.adatatad}>
@@ -194,7 +232,7 @@ export default class Listaad extends Component {
           </View>
         </View>
 
-        <View style={{backgroundColor:"brown"}}>
+        <View style={{ backgroundColor: "brown" }}>
           <DialogInput
             isDialogVisible={this.state.visible}
             message={"Nevezed el a listádat!"}
@@ -205,14 +243,14 @@ export default class Listaad extends Component {
           ></DialogInput>
         </View>
         {/*----FELSŐ CHECKBOX ELEMEI----*/}
-        <View style={{ flex: 9,backgroundColor:"#2c3531" }}>
-        
+        <View style={{ flex: 9, backgroundColor: "#2c3531" }}>
+
           <FlatList
             //horizontal={true} 
             numColumns={2}
             showsHorizontalScrollIndicator={false}
             getItemCount={this.get}
-            style={{marginTop:100}}
+            style={{ marginTop: 100 }}
             index={0}
             data={this.state.termekektomb}
             renderItem={({ item }) => (
@@ -220,43 +258,52 @@ export default class Listaad extends Component {
                 style={styles.felsocheck}
               >
                 <View style={styles.icon}>
-                <Pressable onPress={() => this.handleChange(item.id)}>
-                  <MaterialCommunityIcons
-                    name={
-                      item.isChecked
-                        ? "check"
-                        : "plus"
-                    }
-                    size={24}
-                    color="#black"
-                  />
-                </Pressable>
+                  <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
+                    <MaterialCommunityIcons
+                      name={
+                        item.isChecked
+                          ? "check"
+                          : "plus"
+                      }
+                      size={24}
+                      color="#black"
+                    />
+                  </Pressable>
                 </View>
-                <Text style={{color: "#f5fffa",fontSize:15}}>{item.megnevezes}</Text>
+                <Text style={{ color: "#f5fffa", fontSize: 15 }}>{item.megnevezes}</Text>
               </View>
             )}
           />
-          
+
         </View>
         {/*----lISTA ELEMEINEK MUTATÁSA----*/}
-        <View style={{ flex: 9 ,backgroundColor:"#2c3531", paddingTop:height*0.1}}>
+        <View style={{ flex: 9, backgroundColor: "#2c3531", paddingTop: height * 0.1 }}>
           <FlatList
             data={this.state.data}
-            keyExtractor={({ id }, index) => id}
+            keyExtractor={(item, index) => String(index)}
             renderItem={({ item }) => (
-              <View style={styles.listatartalom}>
-              
-                        <View style={{ flexDirection: "row",flex:1}}>
-                          <View style={{flex:1,justifyContent:"center"}}>
-                          <Entypo style={{marginLeft:10}} name="shop" size={25} color="#f5fffa" />
-                          </View> 
-                        <View style={{flex:13,justifyContent:"center"}}>
-                         <Text style={{color:"#f5fffa",marginLeft:10}}>{item.megnevezes}</Text>
-                        </View>
-                        </View>
+              <View key={id} style={styles.listatartalom}>
+
+                <View style={{ flexDirection: "row", flex: 1 }}>
+                  <View style={{ flex: 1, justifyContent: "center" }}>
+                    <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="#f5fffa" />
                   </View>
-             
-            
+                  <View style={{ flex: 13, justifyContent: "center" }}>
+                    <Text style={{ color: "#f5fffa", marginLeft: 10 }}>{item.megnevezes}</Text>
+                  </View>
+                  <View style={styles.torlesgomb}>
+                    <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
+                      <MaterialCommunityIcons
+                        name="delete"
+                        size={24}
+                        color="#black"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+
             )}
           />
         </View>
@@ -264,17 +311,17 @@ export default class Listaad extends Component {
     );
   }
 }
-const { width,height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  listatartalom:{
-    backgroundColor:"#116466",
-    height:height*0.05,
-    width:width*1,
-    alignSelf:"center",
-    borderRadius:15,
-    margin:10
-   
+  listatartalom: {
+    backgroundColor: "#116466",
+    height: height * 0.05,
+    width: width * 1,
+    alignSelf: "center",
+    borderRadius: 15,
+    margin: 10
+
 
   },
   text: { textAlign: "center", fontSize: 18 },
@@ -290,41 +337,50 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderWidth: 1,
     borderRadius: 5,
-   // width: width * 0.2,
+    // width: width * 0.2,
     textAlignVertical: "center",
   },
   textInputStyle: {
-    textAlignVertical:"top",
-    borderRadius:15,
-    textAlignVertical:"auto",
-    width:width*1
-},
-image:{
-  backgroundColor:"#808080",
-  width:30,
-  height:55,
-  justifyContent:"center",
-  alignSelf:"flex-end",
-  right:-10,
-  alignItems:"center",
-  borderRadius:15
+    textAlignVertical: "top",
+    borderRadius: 15,
+    textAlignVertical: "auto",
+    width: width * 1
+  },
+  image: {
+    backgroundColor: "#808080",
+    width: 30,
+    height: 55,
+    justifyContent: "center",
+    alignSelf: "flex-end",
+    right: -10,
+    alignItems: "center",
+    borderRadius: 15
 
-}
-,felsocheck:{
-  backgroundColor:"red",
-  flexDirection: "row",
-  width:width*0.5,
-  margin: 5,
-  backgroundColor:"#116466",
-  height:50,
-  borderRadius:15,
-  alignItems:"center",
-  color: "#f5fffa"
-},
-icon:{
-  backgroundColor:"#ffcb9a",
-  borderRadius:50,
-  margin:5,
-  marginRight:10
-}
+  }
+  , felsocheck: {
+    backgroundColor: "red",
+    flexDirection: "row",
+    width: width * 0.5,
+    margin: 5,
+    backgroundColor: "#116466",
+    height: 50,
+    borderRadius: 15,
+    alignItems: "center",
+    color: "#f5fffa"
+  },
+  icon: {
+    backgroundColor: "#ffcb9a",
+    borderRadius: 50,
+    margin: 5,
+    marginRight: 10
+  },
+  torlesgomb:
+  {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#ffcb9a",
+    width: 30,
+
+
+  }
 });

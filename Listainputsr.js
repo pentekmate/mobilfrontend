@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions,FlatList,Image } from "react-native";
+import { Button, StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions, FlatList, Image } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -9,7 +9,7 @@ export default class ButtonBasics extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+
             tomb: [],
             listaelem: "",
             filteredDataSource: ["Articsóka",
@@ -421,40 +421,40 @@ export default class ButtonBasics extends Component {
                 "Zsemle",
             ],
             latszodik: false,
-            
-           
-           
+
+
+
 
         };
     }
-    componentDidMount(){
+    componentDidMount() {
         this.getData().then((vissza_adatok2) => {
-            
-            this.setState({tomb:vissza_adatok2})
-          });
+
+            this.setState({ tomb: vissza_adatok2 })
+        });
     }
-   
+
     getItem = (item) => {
         var x = this.state.tomb.length;
-        
-       
+
+
         this.state.tomb.push({
-                id:x,
-                megnevezes:item
+            id: x,
+            megnevezes: item
         })
-        
+
         this.state.listaelem = "";
 
         this.setState({ listaelem: "" })
         this.setState({ latszodik: false })
         console.log(this.state.tomb)
-       
-        
+
+
     };
 
     searchFilterFunction = (text) => {
         this.state.latszodik = true
-        
+
         if (text) {
             const newData = this.state.masterDataSource.filter(
                 function (item) {
@@ -478,12 +478,12 @@ export default class ButtonBasics extends Component {
     };
     getData = async () => {
         try {
-          const jsonValue = await AsyncStorage.getItem('@listaelemek')
-          return jsonValue != null ? JSON.parse(jsonValue) : null;
+            const jsonValue = await AsyncStorage.getItem('@listaelemek')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch (e) {
-          // error reading value
+            // error reading value
         }
-      }
+    }
 
     storeData = async (value) => {
         try {
@@ -495,92 +495,93 @@ export default class ButtonBasics extends Component {
     }
     //adatok mentése asyncstorageba majd képernyő visszaugratása
     tarol = () => {
-        
+
         this.props.navigation.navigate('ListaLétrehozása')
-        try{
-            this.storeData(this.state.tomb)}
-            catch(err){}
-            finally{
-                console.log("Sikeres felvitel")
+        try {
+            this.storeData(this.state.tomb)
         }
-        
+        catch (err) { }
+        finally {
+            console.log("Sikeres felvitel")
+        }
+
     }
 
 
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ flexDirection: "column", flex: 1,backgroundColor:"#2c3531",}}>
+                <View style={{ flexDirection: "column", flex: 1, backgroundColor: "#2c3531", }}>
 
-{/*------------------------------------------------------------------VIEW RENDEZÉSE SEARCHBAR---------------------------------------------------------------------------------------------------------*/}
-                   
-                                                     
-                       <View style={{flex:1}}>
-                       <View style={{flexDirection:"row" ,flex:1}}>
-                       <View style={{flex:1,backgroundColor:"696969",justifyContent:"center"}}>
-                        <View style={styles.image}>
-                        <Image
-                            source={require('./feher-removebg-preview.png')} //Change your icon image here
-                            style={{width:23,height:23}}
-                        />
-                        </View>
-                        </View>
-                        <View style={{backgroundColor:"#2c3531",flex:9,justifyContent:"center"}}>
-                            <TextInput
-                                style={styles.textInputStyle}
-                                onChangeText={(text) => this.searchFilterFunction(text)}
-                                value={this.state.listaelem}
-                                placeholderTextColor = "#f5fffa"
-                                placeholder="Termék keresése.."
-                            ></TextInput>
+                    {/*------------------------------------------------------------------VIEW RENDEZÉSE SEARCHBAR---------------------------------------------------------------------------------------------------------*/}
+
+
+                    <View style={{ flex: 1 }}>
+                        <View style={{ flexDirection: "row", flex: 1 }}>
+                            <View style={{ flex: 1, backgroundColor: "696969", justifyContent: "center" }}>
+                                <View style={styles.image}>
+                                    <Image
+                                        source={require('./feher-removebg-preview.png')} //Change your icon image here
+                                        style={{ width: 23, height: 23 }}
+                                    />
+                                </View>
                             </View>
-                            
+                            <View style={{ backgroundColor: "#2c3531", flex: 9, justifyContent: "center" }}>
+                                <TextInput
+                                    style={styles.textInputStyle}
+                                    onChangeText={(text) => this.searchFilterFunction(text)}
+                                    value={this.state.listaelem}
+                                    placeholderTextColor="#f5fffa"
+                                    placeholder="Termék keresése.."
+                                ></TextInput>
+                            </View>
+
                         </View>
-                       </View>
-                  <View style={{flex:1,backgroundColor:"696969"}}>
-                    {this.state.tomb.length>0?<TouchableOpacity 
-                  onPress={(this.tarol)}
-                  style={{backgroundColor:"#116466",width:65,alignSelf:"flex-end",alignItems:"center",borderRadius:150/2,height:65,justifyContent:"center",zIndex:1,bottom:-width*1.57,left:-width*0.03}}>
-                  <Image
-                        source={require('./save-removebg-preview.png')} //Change your icon image here
-                        style={{width:50,height:50}}
-                        />
-                    </TouchableOpacity>:<Text></Text>  }
-                      
-                  </View>
-                    <View style={{flex:9}}>
-                    {this.state.latszodik == true ?
-                                   <FlatList
-                                   data={this.state.filteredDataSource}
-                                   keyExtractor={({ key }, index) => key}
-                                   renderItem={({ item,key}) => (
-                                    
-                                    <View style={styles.listaelemek}  key={key}>
-                                         
-                                         <View  key={key} style={styles.listaelemektext} >
-                                         <Image
+                    </View>
+                    <View style={{ flex: 1, backgroundColor: "696969" }}>
+                        {this.state.tomb.length > 0 ? <TouchableOpacity
+                            onPress={(this.tarol)}
+                            style={{ backgroundColor: "#116466", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, bottom: -width * 1.57, left: -width * 0.03 }}>
+                            <Image
+                                source={require('./save-removebg-preview.png')} //Change your icon image here
+                                style={{ width: 50, height: 50 }}
+                            />
+                        </TouchableOpacity> : <Text></Text>}
+
+                    </View>
+                    <View style={{ flex: 9 }}>
+                        {this.state.latszodik == true ?
+                            <FlatList
+                                data={this.state.filteredDataSource}
+                                keyExtractor={(item, index) => String(index)}
+                                renderItem={({ item, key }) => (
+
+                                    <View style={styles.listaelemek} key={key}>
+
+                                        <View key={key} style={styles.listaelemektext} >
+                                            <Image
                                                 source={require('./feher-removebg-preview.png')} //Change your icon image here
-                                                style={{width:23,height:23}}
+                                                style={{ width: 23, height: 23 }}
                                             />
-                                            <Text  key={key} style={{fontSize:15,color:"white",fontWeight:"bold",position:"absolute",paddingLeft:25}}>{item}</Text>
-                                            <View  key={item.key} style={styles.segedview}></View>
-                                    </View>
-                                        <TouchableOpacity  key={key}  style={styles.pluszjel}
-                                        onPress={() => this.getItem(item)}
-                                        ><Text  key={key} style={{textAlign:"center",fontSize:18}}>+</Text>
+                                            <Text key={key} style={{ fontSize: 15, color: "white", fontWeight: "bold", position: "absolute", paddingLeft: 25 }}>{item}</Text>
+                                            <View key={item.key} style={styles.segedview}></View>
+                                        </View>
+                                        <TouchableOpacity key={key} style={styles.pluszjel}
+                                            onPress={() => this.getItem(item)}
+                                        ><Text key={key} style={{ textAlign: "center", fontSize: 18 }}>+</Text>
                                         </TouchableOpacity>
-                                       
-                                  </View>
-                       
-                                   )}
-                                 />
-                    : <Text style={{ textAlign: "center", textAlignVertical: "center" }}></Text>}
-                    </View> 
-                    
-                         
+
+                                    </View>
+
+                                )}
+                            />
+                            : <Text style={{ textAlign: "center", textAlignVertical: "center" }}></Text>}
+                    </View>
+
+
                 </View>
-                
-                
+
+
             </View>
         );
     }
@@ -593,54 +594,54 @@ const styles = StyleSheet.create({
 
     },
     textInputStyle: {
-        backgroundColor:"#116466",
-        height:55,
-        textAlignVertical:"top",
-        borderRadius:15,
-        width:width*0.95,
-        alignSelf:"center",
-        textAlignVertical:"auto",
-        fontStyle:"italic",
-        color:"#f5fffa"  
+        backgroundColor: "#116466",
+        height: 55,
+        textAlignVertical: "top",
+        borderRadius: 15,
+        width: width * 0.95,
+        alignSelf: "center",
+        textAlignVertical: "auto",
+        fontStyle: "italic",
+        color: "#f5fffa"
     }
     ,
-    image:{
-        backgroundColor:"#808080",
-        width:30,
-        height:55,
-        width:width*0.1,
-        justifyContent:"center"
-    },listaelemek:{
-        margin:10,
-        backgroundColor:"#116466",
-        borderRadius:15,
-        height:100,
+    image: {
+        backgroundColor: "#808080",
+        width: 30,
+        height: 55,
+        width: width * 0.1,
+        justifyContent: "center"
+    }, listaelemek: {
+        margin: 10,
+        backgroundColor: "#116466",
+        borderRadius: 15,
+        height: 100,
     },
-    listaelemektext:{
-        margin:20,
-        height:40,
-        width:width*0.5
-        
-        
+    listaelemektext: {
+        margin: 20,
+        height: 40,
+        width: width * 0.5
+
+
     },
-    segedview:{
-        marginTop:20,
-        backgroundColor:"green",
-        width:width*0.7,
-        borderBottomWidth:1,
-        borderBottomColor:"#d9b08c",
+    segedview: {
+        marginTop: 20,
+        backgroundColor: "green",
+        width: width * 0.7,
+        borderBottomWidth: 1,
+        borderBottomColor: "#d9b08c",
     },
-    pluszjel:{
-        backgroundColor:"#ffcb9a",
-        width:width*0.09,
-        alignSelf:"flex-end",
-        margin:20,
-        position:"absolute",
-        marginBottom:25,
-        borderRadius:50,
-      
-        
-       
+    pluszjel: {
+        backgroundColor: "#ffcb9a",
+        width: width * 0.09,
+        alignSelf: "flex-end",
+        margin: 20,
+        position: "absolute",
+        marginBottom: 25,
+        borderRadius: 50,
+
+
+
     }
 
 });
