@@ -10,17 +10,59 @@ export default class App extends Component {
         super(props);
 
         this.state = {
+            felhasznalonev:"",
             data: [],
             isLoading: true,
             products: [],
             tartalom: [],
+            felhasznaloId:"",
+            felhasznalok:[]
         };
     }
+    getData1 = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('@felhasznalo')
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+
+        }
+    }
+    async getFelhasznalok() {
+        try {
+          const response = await fetch('http://192.168.1.173:3000/felhasznalok');
+          const json = await response.json();
+          //console.log(json)
+          this.setState({ felhasznalok: json });
+          console.log(this.state.felhasznalok)
+        } catch (error) {
+          console.log(error);
+        } finally {
+          this.setState({ isLoading: false });
+        }
+
+        this.state.felhasznalok.map((item)=>{
+            if(item.felhasznalonev==this.state.felhasznalonev)
+            {
+               this.state.felhasznaloId=item.id
+               console.log(item.id)
+            }
+        })
+
+
+      }
 
     componentDidMount() {
+        console.log(this.state.felhasznalonev)
         this.getData().then(adatokvissza => {
             this.setState({ products: adatokvissza })
         })
+
+        this.getData1().then(fh => {
+          this.state.felhasznalonev=fh
+        })
+        this.getFelhasznalok();
+
+        
         this.getLista();
     }
 
@@ -62,15 +104,27 @@ export default class App extends Component {
 
     async getLista() {
         try {
-            const response = await fetch('http://pentek-mate-miklos.dszcbaross.tk/listak');
+            let adatok={
+              bevitel1:this.state.felhasznaloId
+            }
+            const response = await fetch('http://192.168.1.173:3000/felhsznalolistai',
+            {
+              method: "POST",
+              body: JSON.stringify(adatok),
+              headers: {"Content-type": "application/json; charset=UTF-8"}
+            }
+            );
             const json = await response.json();
             this.setState({ data: json });
-        } catch (error) {
+            console.log("json")
+            console.log(JSON.stringify(json))
+          } catch (error) {
             console.log(error);
-        } finally {
+          } finally {
             this.setState({ isLoading: false });
+          }
         }
-    }
+    
 
     getParsedDate(strDate) {
         var strSplitDate = String(strDate).split(' ');
@@ -94,6 +148,7 @@ export default class App extends Component {
     render() {
         return (
             <View >
+                <Text style={{fontSize:20,alignSelf:"center"}}>{this.state.felhasznalonev} listái.</Text>
                 <FlatList
                     data={this.state.data}
                     renderItem={({ item }) => (
@@ -119,16 +174,6 @@ export default class App extends Component {
 
                             </List.Accordion>
                         </List.Section>
-
-
-
-
-                        /*<TouchableOpacity onPress={() => this.funkcio()}>
-                    <View style={{ backgroundColor: "lightgreen", margin: 10, borderRadius: 10, padding: 5 }}>
-                        <Text style={{ fontSize: 20 }}>{item.listak_nev}</Text>
-                        <Text style={{ fontSize: 20 }}>{this.getParsedDate(item.listak_datum)}</Text>
-                    </View>
-                </TouchableOpacity>*/
                     )}
                 />
 

@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
 import { Entypo } from '@expo/vector-icons';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 
 export default class Listaad extends Component {
@@ -22,6 +23,7 @@ export default class Listaad extends Component {
     super(props);
 
     this.state = {
+      alertMutatasa:false,
       data: [],
       listanev: "",
       vissza_adatok2: [],
@@ -51,9 +53,8 @@ export default class Listaad extends Component {
   adatatad = () => {
     var tartalom = [];
     this.state.data.map((item) => tartalom.push(item.megnevezes));
-    // alert(this.state.listanev)
     if (tartalom.length == 0) {
-      alert("Nincs semmi a listában");
+     this.setState({alertMutatasa:true})
     } else {
       this.setState({ visible: true });
     }
@@ -145,25 +146,23 @@ export default class Listaad extends Component {
         });
       }
       if (nev == termek.megnevezes && termek.isChecked == true) {
-        let index = this.state.data.indexOf(termek.megnevezes) + 1
+        let index = this.state.data.findIndex((item)=>item.megnevezes==nev)
+        console.log(this.state.data)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
           console.log(this.state.data)
         }
       }
+      
     });
-
-
 
   };
   ListaelemTorles = (termeknev) => {
-    //alert(id)
-    //console.log(this.state.termekektomb)
     console.log(this.state.data)
     let tomb = this.state.data
     let tomb1 = this.state.termekektomb
-
+    //fenti checklist elemeinek vissza állítása------------
     this.state.termekektomb.map((termekvissza) => {
       if (termeknev == termekvissza.megnevezes) {
         termekvissza.isChecked = false
@@ -171,10 +170,11 @@ export default class Listaad extends Component {
         //this.setState({ data: tomb1 });
       }
     })
+    //
+
     this.state.termekektomb.map((termek) => {
       if (termeknev == termek.megnevezes) {
-
-        let index = this.state.data.indexOf(termek.megnevezes) + 1
+        let index = this.state.data.findIndex((item)=>item.megnevezes==termeknev)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
@@ -183,7 +183,7 @@ export default class Listaad extends Component {
     })
     this.state.data.map((termek) => {
       if (termeknev == termek.megnevezes) {
-        let index = this.state.data.indexOf(termek.megnevezes) + 1
+        let index = this.state.data.findIndex((item)=>item.megnevezes==termeknev)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
@@ -191,12 +191,34 @@ export default class Listaad extends Component {
         }
       }
     })
+    this.storeData([])
+    this.storeData(this.state.data)
 
   }
   render() {
     return (
+      
       <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
         {/*----------------------------LISTAELNEVEZÉSE,MENTÉSE-------------------- */}
+        <AwesomeAlert
+          show={this.state.alertMutatasa}
+          showProgress={false}
+          title="Hiba"
+          message="A listád üres!"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          confirmText="OK"
+          cancelText="Lista készítése"
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => {
+            this.setState({alertMutatasa:false});
+          }}
+          onCancelPressed={() => {
+            this.setState({alertMutatasa:false});
+          }}
+        />
 
         <View style={{ flexDirection: "row", backgroundColor: "#2c3531", flex: 1 }}>
           <View style={{ flex: 1, backgroundColor: "#2c3531" }}>
@@ -282,7 +304,7 @@ export default class Listaad extends Component {
             data={this.state.data}
             keyExtractor={(item, index) => String(index)}
             renderItem={({ item }) => (
-              <View key={id} style={styles.listatartalom}>
+              <View  style={styles.listatartalom}>
 
                 <View style={{ flexDirection: "row", flex: 1 }}>
                   <View style={{ flex: 1, justifyContent: "center" }}>

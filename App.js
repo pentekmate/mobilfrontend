@@ -1,17 +1,20 @@
 import * as React from 'react';
-import { Button, View } from 'react-native';
+import { Button, View,Text,TextInput, Alert } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Kiir from './Elso'
 import Listaad from './Lista_input';
-import Listainputsr from './Listainputsr'
+import Listainputsr from './Listainputsr';
+import Login from './Login'
+import Regisztracio from './Regisztracio';
+
 
 function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
-        onPress={() => navigation.navigate('Notifications')}
+        onPress={() =>{ Felhasznalobelepve=false;console.log(Felhasznalobelepve)}}
         title="Go to notifications"
       />
     </View>
@@ -39,10 +42,28 @@ function Masodik_lap({ navigation }) {
     <Kiir></Kiir>
   );
 }
+function Bejelentkezes({navigation}){
+  return(
+  <Login navigation={navigation}></Login>);
+ }
+
+ function Regisztr({navigation}){
+  return(
+  <Regisztracio navigation={navigation}></Regisztracio>);
+ }
+
+
+
+
+
 function Root({ navigation }) {
   return (
-    <Drawer.Navigator useLegacyImplementation initialRouteName="Home">
+    <Drawer.Navigator useLegacyImplementation initialRouteName="Bejelentkezes"  >
+      <Drawer.Screen name="Bejelentkezes" component={Bejelentkezes} options={{
+    drawerItemStyle: { height: 0 },headerShown:false
+  }} />
       <Drawer.Screen name="Home" component={HomeScreen} />
+     
       <Drawer.Screen name="Notifications" component={NotificationsScreen} />
       <Drawer.Screen name="ListaLétrehozása" component={Elso_lap} />
       <Drawer.Screen name="Listák" component={Masodik_lap} />
@@ -51,7 +72,9 @@ function Root({ navigation }) {
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator()
-export default function App() {
+
+
+const Belepve= ()=>{
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -61,7 +84,12 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Listalétrehozása" component={Listainputsr} />
+        <Stack.Screen name="Regisztráció" component={Regisztracio} />
       </Stack.Navigator>
     </NavigationContainer>
+    
   );
 }
+
+export default Belepve;
+

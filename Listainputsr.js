@@ -435,6 +435,7 @@ export default class ButtonBasics extends Component {
     }
 
     getItem = (item) => {
+        
         var x = this.state.tomb.length;
 
 
@@ -447,7 +448,6 @@ export default class ButtonBasics extends Component {
 
         this.setState({ listaelem: "" })
         this.setState({ latszodik: false })
-        console.log(this.state.tomb)
 
 
     };
@@ -521,7 +521,7 @@ export default class ButtonBasics extends Component {
                             <View style={{ flex: 1, backgroundColor: "696969", justifyContent: "center" }}>
                                 <View style={styles.image}>
                                     <Image
-                                        source={require('./feher-removebg-preview.png')} //Change your icon image here
+                                        source={require('./feher-removebg-preview.png')} 
                                         style={{ width: 23, height: 23 }}
                                     />
                                 </View>
@@ -543,7 +543,7 @@ export default class ButtonBasics extends Component {
                             onPress={(this.tarol)}
                             style={{ backgroundColor: "#116466", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, bottom: -width * 1.57, left: -width * 0.03 }}>
                             <Image
-                                source={require('./save-removebg-preview.png')} //Change your icon image here
+                                source={require('./save-removebg-preview.png')} 
                                 style={{ width: 50, height: 50 }}
                             />
                         </TouchableOpacity> : <Text></Text>}
