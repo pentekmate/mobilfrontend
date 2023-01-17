@@ -22,8 +22,9 @@ export default class Login extends Component {
     }
   }
   async getFelhasznalok() {
+    
     try {
-      const response = await fetch('http://192.168.6.19:3000/felhasznalok');
+      const response = await fetch('http://192.168.1.173:3000/felhasznalok');
       const json = await response.json();
       this.state.data = json
     } catch (error) {
@@ -34,7 +35,9 @@ export default class Login extends Component {
     console.log(this.state.data)
   }
   componentDidMount() {
+    this.navFocusListener = this.props.navigation.addListener('focus', () => {
     this.getFelhasznalok()
+    })
   }
   bejelentkezes = () => {
     let talalt = 0;

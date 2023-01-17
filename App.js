@@ -9,6 +9,7 @@ import Listaad from './Lista_input';
 import Listainputsr from './Listainputsr';
 import Login from './Login'
 import Regisztracio from './Regisztracio';
+import Profil from './Profilom';
 let fh = "";
 let x = false;
 
@@ -60,7 +61,7 @@ function Elso_lap({ navigation }) {
 
 function Masodik_lap({ navigation }) {
   return (
-    <Kiir></Kiir>
+    <Kiir navigation={navigation}></Kiir>
   );
 }
 function Bejelentkezes({ navigation }) {
@@ -72,20 +73,24 @@ function Regisztr({ navigation }) {
   return (
     <Regisztracio navigation={navigation}></Regisztracio>);
 }
+function Prof({ navigation }) {
+  return (
+    <Profil navigation={navigation}></Profil>);
+}
 
 
 function Root({ navigation }) {
   return (
-
-    <Drawer.Navigator useLegacyImplementation initialRouteName={FelhasznaloBelepve(), x ? "Home" : "Bejelentkezes"}  >
+    FelhasznaloBelepve(),
+    <Drawer.Navigator useLegacyImplementation initialRouteName={x ? "Home" : "Bejelentkezes"}  >
       <Drawer.Screen name="Bejelentkezes" component={Bejelentkezes} options={{
         drawerItemStyle: { height: 0 }, headerShown: false
       }} />
       <Drawer.Screen name="Home" component={HomeScreen} />
-
       <Drawer.Screen name="Notifications" component={NotificationsScreen} />
       <Drawer.Screen name="ListaLétrehozása" component={Elso_lap} />
       <Drawer.Screen name="Listák" component={Masodik_lap} />
+      <Drawer.Screen name="Profilom" component={Prof} />
     </Drawer.Navigator>)
 }
 

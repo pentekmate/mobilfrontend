@@ -13,57 +13,65 @@ export default class Regisztracio extends Component {
 
     };
   }
-
-  async getFelhasznalok() {
-    try {
-      const response = await fetch('http://192.168.6.19:3000/felhasznalok');
-      const json = await response.json();
-      console.log(json)
-      this.setState({ data: json });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      this.setState({ isLoading: false });
+  regisztracioellen=()=>{
+    let x=0;
+    let ures=0
+    this.state.data.map((item)=>
+    {
+      if(item.felhasznalo_nev==this.state.regisztralfelh)
+      {
+       x+=1
+        
+      }
+    
+    })
+      if(this.state.regisztralfelh.length==0||this.state.regisztraljelsz.length==0)
+      {
+        ures+=1
+        alert("Üresen hagyott Felhasználónév/jelszó")
+      }
+      if(x>0||ures>0)
+      {
+        alert("Nem megfelelő adatok!")
+      }
+      else{
+        try{
+        var bemenet={
+          bevitel1:this.state.regisztralfelh,
+          bevitel2:this.state.regisztraljelsz
+        }
+        fetch("http://192.168.1.173:3000/regisztracio", {
+          method: "POST",
+          body: JSON.stringify(bemenet),
+          headers: {"Content-type": "application/json; charset=UTF-8"}
+        }
+      )
     }
+    catch(e){console.log(e)}
+    finally{
+      this.props.navigation.navigate('Bejelentkezes')
+      alert("Sikeres regisztráció")
+    }
+    }
+   
+
   }
   componentDidMount() {
-    this.getFelhasznalok()
+   
   }
   regisztracio = () => {
-    let egyezes = 0;
-    var adatok = {
-      bevitel1: this.state.regisztralfelh,
-      bevitel2: this.state.regisztraljelsz,
-    };
-    this.state.data.map((item) => {
-      if (item.felhasznalonev == this.state.regisztralfelh) {
-        egyezes = +1
+    fetch('http://192.168.1.173:3000/felhasznalok'    )
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        data: responseJson,
       }
-    })
-    if (egyezes > 0) {
-      alert("A Felhasználónév már használatban van!")
-      this.setState({ regisztralfelh: "" })
-      this.setState({ regisztraljelsz: "" })
-    }
-    else {
-      try {
-        const response = fetch('http://192.168.6.19:3000/regisztracio', {
-          method: "POST",
-          body: JSON.stringify(adatok),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
-        });
-      } catch (err) {
-        alert("Sikertelen feltöltés");
-        this.setState({ regisztralfelh: "" })
-        this.setState({ regisztraljelsz: "" })
-      } finally {
-        this.props.navigation.navigate('Bejelentkezes')
-        alert("Sikeres feltöltés");
-        this.setState({ regisztralfelh: "" })
-        this.setState({ regisztraljelsz: "" })
-      }
-    }
+      , function(){
+      });
+    }).then(this.regisztracioellen)
+    
   }
+
 
 
 

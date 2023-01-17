@@ -70,7 +70,7 @@ export default class Listaad extends Component {
       bevitel3: this.state.felhasznalonev
     };
     try {
-      const response = fetch('http://192.168.6.19:3000/tartalomfel', {
+      const response = fetch('http://192.168.1.173:3000/tartalomfel', {
         method: "POST",
         body: JSON.stringify(adatok),
         headers: { "Content-type": "application/json; charset=UTF-8" },
