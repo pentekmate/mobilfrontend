@@ -23,7 +23,7 @@ export default class Listaad extends Component {
     super(props);
 
     this.state = {
-      alertMutatasa:false,
+      alertMutatasa: false,
       data: [],
       listanev: "",
       vissza_adatok2: [],
@@ -38,6 +38,7 @@ export default class Listaad extends Component {
       visible: false,
       setVisible: false,
       bevittadat: "",
+      felhasznalonev: ""
     };
   }
 
@@ -54,7 +55,7 @@ export default class Listaad extends Component {
     var tartalom = [];
     this.state.data.map((item) => tartalom.push(item.megnevezes));
     if (tartalom.length == 0) {
-     this.setState({alertMutatasa:true})
+      this.setState({ alertMutatasa: true })
     } else {
       this.setState({ visible: true });
     }
@@ -66,9 +67,10 @@ export default class Listaad extends Component {
     var adatok = {
       bevitel1: this.state.listanev,
       bevitel2: tartalom,
+      bevitel3: this.state.felhasznalonev
     };
     try {
-      const response = fetch('http://pentek-mate-miklos.dszcbaross.tk/tartalomfel', {
+      const response = fetch('http://192.168.6.19:3000/tartalomfel', {
         method: "POST",
         body: JSON.stringify(adatok),
         headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -80,6 +82,15 @@ export default class Listaad extends Component {
     }
     this.setState({ visible: false });
   };
+  getData1 = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@felhasznalo')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  }
+
 
 
   getData = async () => {
@@ -90,6 +101,7 @@ export default class Listaad extends Component {
       // error reading value
     }
   }
+
   storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
@@ -105,6 +117,11 @@ export default class Listaad extends Component {
         this.setState({ data: vissza_adatok2 })
         //console.log(this.state.vissza_adatok2)
         console.log(this.state.data)
+      });
+      this.getData1().then((fh) => {
+        this.setState({ felhasznalonev: fh })
+        //console.log(this.state.vissza_adatok2)
+        console.log(this.state.felhasznalonev)
       });
     });
 
@@ -146,7 +163,7 @@ export default class Listaad extends Component {
         });
       }
       if (nev == termek.megnevezes && termek.isChecked == true) {
-        let index = this.state.data.findIndex((item)=>item.megnevezes==nev)
+        let index = this.state.data.findIndex((item) => item.megnevezes == nev)
         console.log(this.state.data)
         if (index !== -1) {
           tomb.splice(index, 1);
@@ -154,7 +171,7 @@ export default class Listaad extends Component {
           console.log(this.state.data)
         }
       }
-      
+
     });
 
   };
@@ -174,7 +191,7 @@ export default class Listaad extends Component {
 
     this.state.termekektomb.map((termek) => {
       if (termeknev == termek.megnevezes) {
-        let index = this.state.data.findIndex((item)=>item.megnevezes==termeknev)
+        let index = this.state.data.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
@@ -183,7 +200,7 @@ export default class Listaad extends Component {
     })
     this.state.data.map((termek) => {
       if (termeknev == termek.megnevezes) {
-        let index = this.state.data.findIndex((item)=>item.megnevezes==termeknev)
+        let index = this.state.data.findIndex((item) => item.megnevezes == termeknev)
         if (index !== -1) {
           tomb.splice(index, 1);
           this.setState({ data: tomb });
@@ -197,7 +214,7 @@ export default class Listaad extends Component {
   }
   render() {
     return (
-      
+
       <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
         {/*----------------------------LISTAELNEVEZÉSE,MENTÉSE-------------------- */}
         <AwesomeAlert
@@ -213,10 +230,10 @@ export default class Listaad extends Component {
           cancelText="Lista készítése"
           confirmButtonColor="#DD6B55"
           onConfirmPressed={() => {
-            this.setState({alertMutatasa:false});
+            this.setState({ alertMutatasa: false });
           }}
           onCancelPressed={() => {
-            this.setState({alertMutatasa:false});
+            this.setState({ alertMutatasa: false });
           }}
         />
 
@@ -304,7 +321,7 @@ export default class Listaad extends Component {
             data={this.state.data}
             keyExtractor={(item, index) => String(index)}
             renderItem={({ item }) => (
-              <View  style={styles.listatartalom}>
+              <View style={styles.listatartalom}>
 
                 <View style={{ flexDirection: "row", flex: 1 }}>
                   <View style={{ flex: 1, justifyContent: "center" }}>
