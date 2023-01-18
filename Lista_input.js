@@ -236,9 +236,9 @@ export default class Listaad extends Component {
             this.setState({ alertMutatasa: false });
           }}
         />
-
-        <View style={{ flexDirection: "row", backgroundColor: "#2c3531", flex: 1 }}>
-          <View style={{ flex: 1, backgroundColor: "#2c3531" }}>
+  
+        <View style={{ flexDirection: "row", backgroundColor: "rgb(18,18,18) ", flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor: "rgb(18,18,18) " }}>
             <TouchableOpacity
               onPress={this.mindentorles}>
               <Text style={styles.mentes}>Törlés</Text>
@@ -246,7 +246,7 @@ export default class Listaad extends Component {
           </View>
 
           <View style={{ flex: 4, alignItems: "center" }}>
-            <View style={{ flexDirection: "row", backgroundColor: "#2c3531", flex: 1, }}>
+            <View style={{ flexDirection: "row", backgroundColor: "rgb(18,18,18) ", flex: 1, }}>
               <View style={{ flex: 1, backgroundColor: "696969", justifyContent: "center" }}>
                 <View style={styles.image}>
                   <Image
@@ -264,7 +264,7 @@ export default class Listaad extends Component {
               </View>
             </View>
           </View>
-          <View style={{ flex: 1, backgroundColor: "#2c3531" }}>
+          <View style={{ flex: 1, backgroundColor: "rgb(18,18,18) " }}>
             <TouchableOpacity onPress={this.adatatad}>
               <Text style={styles.mentes}>Mentés</Text>
             </TouchableOpacity>
@@ -282,7 +282,7 @@ export default class Listaad extends Component {
           ></DialogInput>
         </View>
         {/*----FELSŐ CHECKBOX ELEMEI----*/}
-        <View style={{ flex: 9, backgroundColor: "#2c3531" }}>
+        <View style={{ flex: 9, backgroundColor: "rgb(18,18,18) " }}>
 
           <FlatList
             //horizontal={true} 
@@ -316,7 +316,7 @@ export default class Listaad extends Component {
 
         </View>
         {/*----lISTA ELEMEINEK MUTATÁSA----*/}
-        <View style={{ flex: 9, backgroundColor: "#2c3531", paddingTop: height * 0.1 }}>
+        <View style={{ flex: 9, backgroundColor: "rgb(18,18,18) ", paddingTop: height * 0.1 }}>
           <FlatList
             data={this.state.data}
             keyExtractor={(item, index) => String(index)}
