@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Feather } from '@expo/vector-icons';
 import {
   StyleSheet,
   View,
@@ -16,7 +17,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
 import { Entypo } from '@expo/vector-icons';
 import AwesomeAlert from 'react-native-awesome-alerts';
-
+import { ipcim } from "./IPcim";
+const IP = require('./IPcim')
 
 export default class Listaad extends Component {
   constructor(props) {
@@ -70,7 +72,7 @@ export default class Listaad extends Component {
       bevitel3: this.state.felhasznalonev
     };
     try {
-      const response = fetch('http://192.168.1.173:3000/tartalomfel', {
+      const response = fetch(IP.ipcim + 'tartalomfel', {
         method: "POST",
         body: JSON.stringify(adatok),
         headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -215,7 +217,7 @@ export default class Listaad extends Component {
   render() {
     return (
 
-      <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
+      <SafeAreaView style={{ flex: 1, flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
         {/*----------------------------LISTAELNEVEZÉSE,MENTÉSE-------------------- */}
         <AwesomeAlert
           show={this.state.alertMutatasa}
@@ -236,39 +238,14 @@ export default class Listaad extends Component {
             this.setState({ alertMutatasa: false });
           }}
         />
-  
-        <View style={{ flexDirection: "row", backgroundColor: "rgb(18,18,18) ", flex: 1 }}>
-          <View style={{ flex: 1, backgroundColor: "rgb(18,18,18) " }}>
-            <TouchableOpacity
-              onPress={this.mindentorles}>
-              <Text style={styles.mentes}>Törlés</Text>
-            </TouchableOpacity>
-          </View>
 
-          <View style={{ flex: 4, alignItems: "center" }}>
-            <View style={{ flexDirection: "row", backgroundColor: "rgb(18,18,18) ", flex: 1, }}>
-              <View style={{ flex: 1, backgroundColor: "696969", justifyContent: "center" }}>
-                <View style={styles.image}>
-                  <Image
-                    source={require('./feher-removebg-preview.png')}
-                    style={{ width: 20, height: 20, left: -5 }}
-                  />
-                </View>
-              </View>
-              <View style={{ backgroundColor: "#116466", flex: 9, justifyContent: "center", borderRadius: 15 }}>
-                <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('Listalétrehozása')}
-                  style={styles.textInputStyle} >
-                  <Text style={{ fontStyle: "italic", color: "#f5fffa" }}>Termék keresése..</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View style={{ flex: 1, backgroundColor: "rgb(18,18,18) " }}>
-            <TouchableOpacity onPress={this.adatatad}>
-              <Text style={styles.mentes}>Mentés</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={[styles.keresesdiv, { flexDirection: "row", flex: 1, backgroundColor: "rgb(1,194,154)", marginTop: 10 }]}>
+          <Feather style={{ paddingTop: 5 }} name="search" size={28} color="white" />
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Listalétrehozása')}
+            style={styles.textInputStyle} >
+            <Text style={{ fontStyle: "italic", color: "#f5fffa" }}>Termék keresése..</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={{ backgroundColor: "brown" }}>
@@ -282,7 +259,7 @@ export default class Listaad extends Component {
           ></DialogInput>
         </View>
         {/*----FELSŐ CHECKBOX ELEMEI----*/}
-        <View style={{ flex: 9, backgroundColor: "rgb(18,18,18) " }}>
+        <View style={{ flex: 9, backgroundColor: "rgb(50,50,50)" }}>
 
           <FlatList
             //horizontal={true} 
@@ -305,7 +282,7 @@ export default class Listaad extends Component {
                           : "plus"
                       }
                       size={24}
-                      color="#black"
+                      color="rgb(1,194,154)"
                     />
                   </Pressable>
                 </View>
@@ -316,7 +293,7 @@ export default class Listaad extends Component {
 
         </View>
         {/*----lISTA ELEMEINEK MUTATÁSA----*/}
-        <View style={{ flex: 9, backgroundColor: "rgb(18,18,18) ", paddingTop: height * 0.1 }}>
+        <View style={{ flex: 9, backgroundColor: "rgb(50,50,50)", paddingTop: height * 0.1 }}>
           <FlatList
             data={this.state.data}
             keyExtractor={(item, index) => String(index)}
@@ -379,36 +356,19 @@ const styles = StyleSheet.create({
     // width: width * 0.2,
     textAlignVertical: "center",
   },
-  textInputStyle: {
-    textAlignVertical: "top",
-    borderRadius: 15,
-    textAlignVertical: "auto",
-    width: width * 1
-  },
-  image: {
-    backgroundColor: "#808080",
-    width: 30,
-    height: 55,
-    justifyContent: "center",
-    alignSelf: "flex-end",
-    right: -10,
-    alignItems: "center",
-    borderRadius: 15
-
-  }
-  , felsocheck: {
+  felsocheck: {
     backgroundColor: "red",
     flexDirection: "row",
     width: width * 0.5,
     margin: 5,
-    backgroundColor: "#116466",
+    backgroundColor: "rgb(1,194,154)",
     height: 50,
     borderRadius: 15,
     alignItems: "center",
     color: "#f5fffa"
   },
   icon: {
-    backgroundColor: "#ffcb9a",
+    backgroundColor: "rgb(50,50,50)",
     borderRadius: 50,
     margin: 5,
     marginRight: 10
@@ -419,7 +379,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#ffcb9a",
     width: 30,
-
-
+  },
+  keresesdiv: {
+    alignItems: "center",
+    borderRadius: 10,
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: '#000',
+    paddingBottom: 10,
+    borderColor: "black",
+    borderWidth: 2
+  },
+  textInputStyle: {
+    flex: 1,
+    padding: 10,
+    justifyContent: "center"
   }
 });
