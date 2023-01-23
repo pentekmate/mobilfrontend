@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ipcim } from "./IPcim";
+const IP = require('./IPcim')
 
 export default class Profil extends Component {
     constructor(props) {
@@ -32,7 +34,22 @@ export default class Profil extends Component {
             })
     }
 
-
+    storeData3 = async (value) => {
+        try {
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem('@listaelemek', jsonValue)
+        } catch (e) {
+          // saving error
+        }
+      }
+      storeData2 = async (value) => {
+        try {
+          const jsonValue = JSON.stringify(value)
+          await AsyncStorage.setItem('@localadatok', jsonValue)
+        } catch (e) {
+          // saving error
+        }
+      }
     getListakszama() {
         var bemenet = {
             bevitel1: this.state.felhasznalonev
@@ -94,6 +111,8 @@ export default class Profil extends Component {
 
     kilepes = () => {
         this.storeData([])
+        this.storeData2([])
+        this.storeData3([])
         this.props.navigation.navigate('Bejelentkezes');
     }
 
@@ -101,17 +120,17 @@ export default class Profil extends Component {
     render() {
         const { data, isLoading } = this.state;
         return (
-            <View style={{ flexDirection: 'column', flex: 1 }}>
+            <View style={{ flexDirection: 'column', flex: 1,backgroundColor:"rgb(50,50,50)"}}>
                 {isLoading ? <ActivityIndicator /> :
                     <View style={{ flex: 1, alignItems: "center" }} >
-                        <Text style={{ fontSize: 25 }}> {this.state.felhasznalonev} felhasználó adatai: </Text>
+                        <Text style={{ fontSize: 25,color:"white" }}> {this.state.felhasznalonev} felhasználó adatai: </Text>
                     </View>}
                 <View style={{ flex: 12 }}>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ flex: 3, alignItems: "flex-start" }}>
-                            <Text style={{ textAlign: "left", fontSize: 16 }}> Általad létrehozott listák száma:</Text>
-                            <Text style={{ textAlign: "left", fontSize: 16, marginTop: 10, marginBottom: 10 }}> Felhasználó neved:</Text>
-                            <Text style={{ textAlign: "left", fontSize: 16, marginTop: 10, marginBottom: 10 }}> Regisztráció dátuma:</Text>
+                            <Text style={{ textAlign: "left", fontSize: 16,color:"white" }}> Általad létrehozott listák száma:</Text>
+                            <Text style={{ textAlign: "left", fontSize: 16, marginTop: 10, marginBottom: 10,color:"white" }}> Felhasználó neved:</Text>
+                            <Text style={{ textAlign: "left", fontSize: 16, marginTop: 10, marginBottom: 10 ,color:"white"}}> Regisztráció dátuma:</Text>
                             <Button title='Kijelentkezés' onPress={this.kilepes}></Button>
                         </View>
                         <View style={{ flex: 1 }}>
@@ -120,18 +139,18 @@ export default class Profil extends Component {
                                 keyExtractor={(item, index) => String(index)}
                                 renderItem={({ item, key }) => (
                                     <View key={key}>
-                                        <Text style={{ fontSize: 16 }}>{item.osszes}</Text>
+                                        <Text style={{ fontSize: 16,color:"white" }}>{item.osszes}</Text>
                                     </View>
                                 )}
                             /></Text>
 
-                            <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 20 }}>{this.state.felhasznalonev}</Text>
+                            <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 20,color:"white" }}>{this.state.felhasznalonev}</Text>
                             <Text><FlatList
                                 data={this.state.regisztrdatum}
                                 keyExtractor={(item, index) => String(index)}
                                 renderItem={({ item, key }) => (
                                     <View key={key}>
-                                        <Text style={{ fontSize: 16 }}>{item.datum}-{item.honap}</Text>
+                                        <Text style={{ fontSize: 16,color:"white" }}>{item.datum}-{item.honap}</Text>
                                     </View>
                                 )}
                             /></Text>

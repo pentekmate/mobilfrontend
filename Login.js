@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, Dimensions, TouchableOpacity, Pressable, KeyboardAvoidingView } from 'react-native';
+import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, Dimensions, TouchableOpacity, Pressable,PanResponder} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
+
 export default class Login extends Component {
+
   constructor(props) {
     super(props);
 
@@ -84,6 +87,7 @@ export default class Login extends Component {
             <View style={[this.state.fokusz1 ? styles.felhaszmalodivfocus : styles.felhasznaloodiv, { backgroundColor: this.state.rosszfelhasznalonev ? "red" : "white" }]}>
               <FontAwesome style={{ marginLeft: 5 }} name="user" size={28} color="black" />
               <TextInput
+               cursorColor={"rgb(50,50,50)"}
                 onFocus={() => this.setState({ fokusz1: true })}
                 onBlur={() => this.setState({ fokusz1: false })}
                 style={styles.textinputfelh}
@@ -100,6 +104,8 @@ export default class Login extends Component {
             <View style={[this.state.fokusz ? styles.jelszodivfocus : styles.jelszodiv, { backgroundColor: this.state.rosszjelszo ? "red" : "white" }]}>
               <MaterialCommunityIcons name="lock" size={28} color="black" />
               <TextInput
+                
+                cursorColor={"rgb(50,50,50)"}
                 onFocus={() => this.setState({ fokusz: true })}
                 onBlur={() => this.setState({ fokusz: false })}
                 style={styles.textinputjelsz}

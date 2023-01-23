@@ -1,58 +1,78 @@
-import React, { useState } from 'react';
+
 import { Button, View, Text, TextInput, Alert, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import Kiir from './Elso'
 import Listaad from './Lista_input';
 import Listainputsr from './Listainputsr';
 import Login from './Login'
 import Regisztracio from './Regisztracio';
 import Profil from './Profilom';
-import { set } from 'react-native-reanimated';
-let fh = "";
-let mehet = false;
+import Toltokep from './Tolto'
+import { color } from 'react-native-reanimated';
 
 
 
+
+
+const Tab = createBottomTabNavigator();
 
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        onPress={() => { Felhasznalobelepve = false; }}
-        title="Go to notifications"
-      />
-    </View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',backgroundColor:"rgb(50,50,50)" }}>
+    </View>,
+          <Tab.Navigator  screenOptions={{tabBarStyle:{backgroundColor:"#01c29a"},headerShown:false,tabBarActiveTintColor:"white",tabBarActiveBackgroundColor:"rgb(18,18,18)"}}>
+          <Tab.Screen  options={{
+      tabBarIcon: ({}) => {
+        return (
+            <AntDesign name="home" size={24} color="white" />
+        );
+      },
+      title:""}} name="TabA" component={TabAScreen} />
+          <Tab.Screen  options={{
+      tabBarIcon: ({}) => {
+        return (
+          <AntDesign name="user" size={24} color="white" />
+        );
+      },
+      title:""
+    }}  name="TabB" component={TabBScreen} />
+      </Tab.Navigator>
   );
 }
+function Home({navigation}){
+  return(
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',backgroundColor:"rgb(50,50,50)" }}>
 
-
-function FelhasznaloBelepve() {
-  getData().then(fl => {
-    fh = fl
-    console.log(fh)
-  })
-
-  console.log(x)
+    </View> 
+  );
 }
-const getData = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('@felhasznalo')
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    // error reading value
-  }
+function TabBScreen() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name="TabA Home" component={Prof} />
+    </Stack.Navigator>
+  );
+}
+function TabAScreen() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name="TabA Home" component={Home} />
+    </Stack.Navigator>
+  );
 }
 
 
 function NotificationsScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',backgroundColor:"rgb(50,50,50)" }}>
       <Button onPress={() => navigation.goBack()} title="Go back home" />
     </View>
   );
@@ -62,6 +82,11 @@ function Elso_lap({ navigation }) {
   return (
     <Listaad navigation={navigation}></Listaad>
 
+  );
+}
+function Toltes({ navigation }) {
+  return (
+    <Toltokep navigation={navigation}></Toltokep>
   );
 }
 
@@ -87,9 +112,15 @@ function Prof({ navigation }) {
 function Root({ navigation }) {
 
   return (
-    <Drawer.Navigator initialRouteName={FelhasznaloBelepve() ? "Home" : "Bejelentkezes"}
+    <Drawer.Navigator 
       screenOptions=
-      {{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: '#181818', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
+      {{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: '#181818', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white",headerTitleAlign:"center" }} >
+
+
+      <Drawer.Screen name="Toltokep" component={Toltes} options={{
+        drawerItemStyle: { height: 0 }, headerShown: false,
+      }} />
+
       <Drawer.Screen name="Bejelentkezes" component={Bejelentkezes} options={{
         drawerItemStyle: { height: 0 }, headerShown: false,
       }} />
@@ -98,6 +129,7 @@ function Root({ navigation }) {
         drawerIcon: ({ }) => (
           <AntDesign name="home" size={24} color="white" />
         ),
+       
       }} />
       <Drawer.Screen name="Notifications" component={NotificationsScreen} />
       <Drawer.Screen name="Listalétrehozás" component={Elso_lap} options={{
@@ -117,7 +149,10 @@ function Root({ navigation }) {
         drawerIcon: ({ }) => (
           <AntDesign name="user" size={24} color="white" />
         ),
+        headerRightContainerStyle:{marginRight:10},
+     
       }} />
+     
     </Drawer.Navigator>
   )
 
@@ -136,7 +171,7 @@ const menu = () => {
           component={Root}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ headerTitle: "" }} />
+        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{title:"Keresés", headerTitle: "Keresés" ,headerStyle:{backgroundColor:'#01c29a',headerTintColor: '#181818'}}} />
         <Stack.Screen name="Regisztráció" component={Regisztracio} />
       </Stack.Navigator>
     </NavigationContainer>

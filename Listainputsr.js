@@ -1,11 +1,28 @@
 import React, { Component } from "react";
-import { Button, StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions, FlatList, Image } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions, FlatList, Image,Animated,PanResponder } from "react-native";
+import CounterInput from "react-native-counter-input";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+import { Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons'; 
 
 
 export default class ButtonBasics extends Component {
+    pan = new Animated.ValueXY();
+    panResponder = PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([
+        null,
+        {dx: this.pan.x, dy: this.pan.y},],
+        {useNativeDriver: false}
+      ),
+      onPanResponderRelease: () => {
+        Animated.spring(this.pan, {
+          toValue: {x: 0, y: 0},
+          useNativeDriver: false,
+        }).start();
+      },
+    });
     constructor(props) {
         super(props);
         this.state = {
@@ -421,12 +438,10 @@ export default class ButtonBasics extends Component {
                 "Zsemle",
             ],
             latszodik: false,
-
-
-
-
+            darab:0
         };
     }
+
     componentDidMount() {
         this.getData().then((vissza_adatok2) => {
 
@@ -435,20 +450,21 @@ export default class ButtonBasics extends Component {
     }
 
     getItem = (item) => {
-
-        var x = this.state.tomb.length;
-
-
+      
+        
+        console.log("counter:",this.state.darab,item)
+     
         this.state.tomb.push({
-            id: x,
-            megnevezes: item
-        })
+         
+            megnevezes:this.state.darab+" "+item
+            
+    })
 
         this.state.listaelem = "";
 
         this.setState({ listaelem: "" })
         this.setState({ latszodik: false })
-
+        this.setState({darab:0})
 
     };
 
@@ -511,37 +527,31 @@ export default class ButtonBasics extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ flexDirection: "column", flex: 1, backgroundColor: "#2c3531", }}>
+                <View style={{ flexDirection: "column", flex: 1, backgroundColor: "rgb(50,50,50)", }}>
 
                     {/*------------------------------------------------------------------VIEW RENDEZÉSE SEARCHBAR---------------------------------------------------------------------------------------------------------*/}
-
-
-                    <View style={{ flex: 1 }}>
-                        <View style={{ flexDirection: "row", flex: 1 }}>
-                            <View style={{ flex: 1, backgroundColor: "696969", justifyContent: "center" }}>
-                                <View style={styles.image}>
-                                    <Image
-                                        source={require('./feher-removebg-preview.png')}
-                                        style={{ width: 23, height: 23 }}
-                                    />
-                                </View>
-                            </View>
-                            <View style={{ backgroundColor: "#2c3531", flex: 9, justifyContent: "center" }}>
+                    <View style={[styles.keresesdiv, { flexDirection: "row",height:height*0.06, backgroundColor: "rgb(1,194,154)", }]}>
+                    <Feather style={{ paddingTop: 5 ,}} name="search" size={28} color="rgb(50,50,50)" />
                                 <TextInput
+                                    cursorColor={"rgb(50,50,50)"}
                                     style={styles.textInputStyle}
                                     onChangeText={(text) => this.searchFilterFunction(text)}
                                     value={this.state.listaelem}
-                                    placeholderTextColor="#f5fffa"
+                                    placeholderTextColor="rgb(50,50,50)"
                                     placeholder="Termék keresése.."
                                 ></TextInput>
-                            </View>
-
-                        </View>
                     </View>
-                    <View style={{ flex: 1, backgroundColor: "696969" }}>
-                        {this.state.tomb.length > 0 ? <TouchableOpacity
+
+                    <Animated.View
+                    style={{
+                        transform: [{translateX: this.pan.x}, {translateY: this.pan.y}],
+                    }}
+                    {...this.panResponder.panHandlers}>
+                           <View style={{ flex: 1, backgroundColor: "696969" }}>
+                        {this.state.tomb.length > 0 ?
+                         <TouchableOpacity
                             onPress={(this.tarol)}
-                            style={{ backgroundColor: "#116466", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, bottom: -width * 1.57, left: -width * 0.03 }}>
+                            style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, bottom: -width * 1.57, left: -width * 0.03 }}>
                             <Image
                                 source={require('./save-removebg-preview.png')}
                                 style={{ width: 50, height: 50 }}
@@ -549,6 +559,11 @@ export default class ButtonBasics extends Component {
                         </TouchableOpacity> : <Text></Text>}
 
                     </View>
+                    </Animated.View>
+
+
+                        
+            
                     <View style={{ flex: 9 }}>
                         {this.state.latszodik == true ?
                             <FlatList
@@ -563,14 +578,19 @@ export default class ButtonBasics extends Component {
                                                 source={require('./feher-removebg-preview.png')} //Change your icon image here
                                                 style={{ width: 23, height: 23 }}
                                             />
-                                            <Text key={key} style={{ fontSize: 15, color: "white", fontWeight: "bold", position: "absolute", paddingLeft: 25 }}>{item}</Text>
+                                            <Text key={key} style={{ fontSize: 15, color: "rgb(50,50,50)", fontWeight: "bold", position: "absolute", paddingLeft: 25 }}>{item}</Text>
                                             <View key={item.key} style={styles.segedview}></View>
                                         </View>
-                                        <TouchableOpacity key={key} style={styles.pluszjel}
-                                            onPress={() => this.getItem(item)}
-                                        ><Text key={key} style={{ textAlign: "center", fontSize: 18 }}>+</Text>
-                                        </TouchableOpacity>
-
+                                        <View style={styles.pluszjel}>
+                                        <CounterInput
+                                            backgroundColor="rgb(50,50,50)"
+                                            increaseButtonBackgroundColor="rgb(1,194,154)"
+                                            decreaseButtonBackgroundColor="rgb(1,194,154)"
+                                            style={{borderColor:"black",borderWidth:2,}}
+                                            onChange={(counter) =>this.setState({darab:counter})}
+                                            />
+                                        </View>
+                                        <TouchableOpacity style={styles.hozzaadas} onPress={()=>this.getItem(item)}><FontAwesome5 name="plus" size={20} color="white" /></TouchableOpacity>
                                     </View>
 
                                 )}
@@ -586,7 +606,7 @@ export default class ButtonBasics extends Component {
         );
     }
 }
-const { width } = Dimensions.get("window");
+const { width,height } = Dimensions.get("window");
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -594,15 +614,13 @@ const styles = StyleSheet.create({
 
     },
     textInputStyle: {
-        backgroundColor: "#116466",
-        height: 55,
+        backgroundColor: "rgb(1,194,154)",
         textAlignVertical: "top",
-        borderRadius: 15,
-        width: width * 0.95,
-        alignSelf: "center",
+        borderRadius: 10,
         textAlignVertical: "auto",
         fontStyle: "italic",
-        color: "#f5fffa"
+        color: "rgb(50,50,50)",
+        fontWeight:"500"
     }
     ,
     image: {
@@ -613,9 +631,10 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     }, listaelemek: {
         margin: 10,
-        backgroundColor: "#116466",
+        backgroundColor: "rgb(1,194,154)",
         borderRadius: 15,
-        height: 100,
+        height: 200,
+
     },
     listaelemektext: {
         margin: 20,
@@ -629,19 +648,39 @@ const styles = StyleSheet.create({
         backgroundColor: "green",
         width: width * 0.7,
         borderBottomWidth: 1,
-        borderBottomColor: "#d9b08c",
+        borderBottomColor: "rgb(50,50,50)",
     },
     pluszjel: {
-        backgroundColor: "#ffcb9a",
         width: width * 0.09,
         alignSelf: "flex-end",
-        margin: 20,
+        margin:10,
+        zIndex:1,
+        right:5,
         position: "absolute",
         marginBottom: 25,
-        borderRadius: 50,
-
-
-
-    }
+        borderRadius: 5,
+        height:'10%'
+    },
+    keresesdiv: {
+        alignItems: "center",
+        borderRadius: 10,
+        flexDirection: "row",
+        borderWidth: 1,
+        paddingBottom: 10,
+        borderColor: "black",
+        borderWidth: 2,
+      },
+      hozzaadas:{
+        //backgroundColor:"rgb(50,50,50)",
+        alignSelf:"flex-end",
+        borderRadius:25,
+        margin:5,
+        width:50,
+        height:50,
+        alignItems:"center",
+        justifyContent:"center",
+        top:height*0.07,
+        right:4
+      }
 
 });
