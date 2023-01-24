@@ -1,5 +1,5 @@
-
-import { Button, View, Text, TextInput, Alert, } from 'react-native';
+import React, { useState } from 'react';
+import { Button, View, Text, TextInput, Alert, NativeEventEmitter, } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -23,56 +23,71 @@ import { color } from 'react-native-reanimated';
 
 
 const Tab = createBottomTabNavigator();
+let Profilom = "Home"
+
+
 
 function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',backgroundColor:"rgb(50,50,50)" }}>
-    </View>,
-          <Tab.Navigator  screenOptions={{tabBarStyle:{backgroundColor:"#01c29a"},headerShown:false,tabBarActiveTintColor:"white",tabBarActiveBackgroundColor:"rgb(18,18,18)"}}>
-          <Tab.Screen  options={{
-      tabBarIcon: ({}) => {
-        return (
-            <AntDesign name="home" size={24} color="white" />
-        );
-      },
-      title:""}} name="TabA" component={TabAScreen} />
-          <Tab.Screen  options={{
-      tabBarIcon: ({}) => {
-        return (
-          <AntDesign name="user" size={24} color="white" />
-        );
-      },
-      title:""
-    }}  name="TabB" component={TabBScreen} />
-      </Tab.Navigator>
-  );
-}
-function Home({navigation}){
-  return(
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',backgroundColor:"rgb(50,50,50)" }}>
 
-    </View> 
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "rgb(50,50,50)" }}>
+    </View>,
+    <Tab.Navigator screenOptions={{ tabBarStyle: { backgroundColor: "#01c29a" }, headerShown: false, tabBarActiveTintColor: "white", tabBarActiveBackgroundColor: "rgb(18,18,18)" }}>
+      <Tab.Screen
+        listeners={{
+          tabPress: () => Profilom = "Home"
+        }}
+
+        options={{
+          tabBarIcon: ({ }) => {
+            return (
+              <AntDesign name="home" size={24} color="white" />
+            );
+          },
+          title: ""
+        }} name="TabA" component={TabAScreen} />
+      <Tab.Screen listeners={{
+        tabPress: () => Profilom = "Profilom"
+      }}
+
+        options={{
+          tabBarIcon: ({ }) => {
+            return (
+              <AntDesign name="user" size={24} color="white" />
+            );
+          },
+          title: "",
+        }} name="TabB" component={TabBScreen} />
+    </Tab.Navigator>
   );
 }
-function TabBScreen() {
+function Home({ navigation }) {
   return (
-    <Stack.Navigator screenOptions={{headerShown:false}}>
-      <Stack.Screen name="TabA Home" component={Prof} />
-    </Stack.Navigator>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "rgb(50,50,50)" }}>
+
+    </View>
   );
 }
 function TabAScreen() {
   return (
-    <Stack.Navigator screenOptions={{headerShown:false}}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="TabA Home" component={Home} />
+    </Stack.Navigator>
+  );
+}
+function TabBScreen() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="TabA Home" component={Prof} />
     </Stack.Navigator>
   );
 }
 
 
+
 function NotificationsScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',backgroundColor:"rgb(50,50,50)" }}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "rgb(50,50,50)" }}>
       <Button onPress={() => navigation.goBack()} title="Go back home" />
     </View>
   );
@@ -112,10 +127,9 @@ function Prof({ navigation }) {
 function Root({ navigation }) {
 
   return (
-    <Drawer.Navigator 
+    <Drawer.Navigator
       screenOptions=
-      {{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: '#181818', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white",headerTitleAlign:"center" }} >
-
+      {{ headerStyle: { backgroundColor: '#01c29a' }, headerTintColor: '#181818', drawerStyle: { backgroundColor: 'rgb(32,32,32)' }, drawerActiveBackgroundColor: "rgb(18,18,18)", drawerActiveTintColor: "white", drawerInactiveTintColor: "white", headerTitleAlign: "center" }} >
 
       <Drawer.Screen name="Toltokep" component={Toltes} options={{
         drawerItemStyle: { height: 0 }, headerShown: false,
@@ -125,11 +139,11 @@ function Root({ navigation }) {
         drawerItemStyle: { height: 0 }, headerShown: false,
       }} />
       <Drawer.Screen name="Home" component={HomeScreen} options={{
-        title: 'Home',
+        title: Profilom,
         drawerIcon: ({ }) => (
           <AntDesign name="home" size={24} color="white" />
         ),
-       
+
       }} />
       <Drawer.Screen name="Notifications" component={NotificationsScreen} />
       <Drawer.Screen name="Listalétrehozás" component={Elso_lap} options={{
@@ -149,10 +163,10 @@ function Root({ navigation }) {
         drawerIcon: ({ }) => (
           <AntDesign name="user" size={24} color="white" />
         ),
-        headerRightContainerStyle:{marginRight:10},
-     
+        headerRightContainerStyle: { marginRight: 10 },
+
       }} />
-     
+
     </Drawer.Navigator>
   )
 
@@ -171,7 +185,7 @@ const menu = () => {
           component={Root}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{title:"Keresés", headerTitle: "Keresés" ,headerStyle:{backgroundColor:'#01c29a',headerTintColor: '#181818'}}} />
+        <Stack.Screen name="Listalétrehozása" component={Listainputsr} options={{ title: "Keresés", headerTitle: "Keresés", headerStyle: { backgroundColor: '#01c29a', headerTintColor: '#181818' } }} />
         <Stack.Screen name="Regisztráció" component={Regisztracio} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -19,7 +19,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DialogInput from "react-native-dialog-input";
 import { Entypo } from '@expo/vector-icons';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
 import { Button } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
@@ -32,12 +32,12 @@ export default class Listaad extends Component {
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: Animated.event([
       null,
-      {dx: this.pan.x, dy: this.pan.y},],
-      {useNativeDriver: false}
+      { dx: this.pan.x, dy: this.pan.y },],
+      { useNativeDriver: false }
     ),
     onPanResponderRelease: () => {
       Animated.spring(this.pan, {
-        toValue: {x: 0, y: 0},
+        toValue: { x: 0, y: 0 },
         useNativeDriver: false,
       }).start();
     },
@@ -48,7 +48,7 @@ export default class Listaad extends Component {
     this.state = {
       alertMutatasa: false,
       data: [],
-      segeddata:[],
+      segeddata: [],
       listanev: "",
       termekektomb: [
         { id: 0, megnevezes: "Cukor", isChecked: false },
@@ -73,14 +73,14 @@ export default class Listaad extends Component {
     return year + "-" + month + "-" + date + ". napi lista";
   };
   adatatad = () => {
- 
-    if (this.state.data.length == 0&&this.state.segeddata.length==0) {
+
+    if (this.state.data.length == 0 && this.state.segeddata.length == 0) {
       this.setState({ alertMutatasa: true })
     } else {
       this.setState({ visible: true });
     }
   };
-  submit_atad (input)  {
+  submit_atad(input) {
     var tartalom = [];
     this.state.data.map((item) => tartalom.push(item.megnevezes));
     this.state.segeddata.map((item) => tartalom.push(item.megnevezes));
@@ -102,13 +102,13 @@ export default class Listaad extends Component {
       alert("Sikeres feltöltés");
     }
     this.setState({ visible: false });
-    this.state.termekektomb.map((item)=>{
-      item.isChecked=false
+    this.state.termekektomb.map((item) => {
+      item.isChecked = false
     })
-    this.setState({data:[]})
-    this.setState({segeddata:[]})
-    this.storeData([]) 
-    this.storeData2([])    
+    this.setState({ data: [] })
+    this.setState({ segeddata: [] })
+    this.storeData([])
+    this.storeData2([])
   };
   getFelhasznalo = async () => {
     try {
@@ -128,22 +128,6 @@ export default class Listaad extends Component {
       // error reading value
     }
   }
-  storeData2 = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('@localadatok', jsonValue)
-    } catch (e) {
-      // saving error
-    }
-  }
- getListainputsr = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('@listaelemek')
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      // error reading value
-    }
-  }
 
   storeData = async (value) => {
     try {
@@ -156,44 +140,51 @@ export default class Listaad extends Component {
   storeData2 = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('@listaelemek', jsonValue)
+      await AsyncStorage.setItem('@localadatok', jsonValue)
     } catch (e) {
       // saving error
     }
   }
+  getListainputsr = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@listaelemek')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  }
+
 
   componentDidMount() {
-    let tomb=this.state.data
     this.getFelhasznalo().then((fh) => {
       this.setState({ felhasznalonev: fh })
     });
     this.getListainputsr().then((vissza_adatok2) => {
-    this.setState({segeddata:vissza_adatok2})
+      this.setState({ segeddata: vissza_adatok2 })
     });
-    
+
     this.navFocusListener = this.props.navigation.addListener('focus', () => {
-      var tomb=this.state.data
       this.getLocaladatok().then((vissza_adatok2) => {
-        this.setState({data:vissza_adatok2})
+        this.setState({ data: vissza_adatok2 })
       });
       this.getFelhasznalo().then((fh) => {
         this.setState({ felhasznalonev: fh })
       });
       this.getListainputsr().then((vissza_adatok2) => {
-        this.setState({segeddata:vissza_adatok2})
+        this.setState({ segeddata: vissza_adatok2 })
       });
 
     });
-  
+
   }
   componentWillUnmount() {
     this.navFocusListener();
-   
+
   }
 
   mindentorles = () => {
     this.setState({ data: [] });
-    this.setState({segeddata: []})
+    this.setState({ segeddata: [] })
     this.storeData([]);
 
     this.state.termekektomb.map((product) => {
@@ -224,10 +215,10 @@ export default class Listaad extends Component {
           isChecked: false,
         });
       }
-   
+
     });
     console.log(this.state.data)
-    this.state.termekektomb.map((termek)=>{
+    this.state.termekektomb.map((termek) => {
       if (nev == termek.megnevezes && termek.isChecked == true) {
         let index = this.state.data.findIndex((item) => item.megnevezes == nev)
         if (index !== -1) {
@@ -237,14 +228,14 @@ export default class Listaad extends Component {
         }
       }
     })
-   
+
 
   };
   ListaelemTorles = (termeknev) => {
     console.log(this.state.data)
     let tomb = this.state.data
     let tomb1 = this.state.termekektomb
-    let tomb2=this.state.segeddata
+    let tomb2 = this.state.segeddata
     //fenti checklist elemeinek vissza állítása------------
     this.state.termekektomb.map((termekvissza) => {
       if (termeknev == termekvissza.megnevezes) {
@@ -287,19 +278,18 @@ export default class Listaad extends Component {
     this.storeData(this.state.data)
 
   }
-  Ugras=()=>{
-   
+  Ugras = () => {
     this.storeData2(this.state.data).then(console.log("siker")).then(this.props.navigation.navigate('Listalétrehozása'))
   }
-  teszt(){
-    alert("teker")
+  teszt() {
+
   }
   render() {
     return (
 
-      <ScrollView onScrollEndDrag={this.teszt} style={{flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
-      
-      <AwesomeAlert
+      <ScrollView onScrollEndDrag={this.teszt} style={{ flexDirection: "column", backgroundColor: "rgb(50,50,50)" }}>
+
+        <AwesomeAlert
           show={this.state.alertMutatasa}
           showProgress={false}
           title="Hiba"
@@ -318,10 +308,10 @@ export default class Listaad extends Component {
             this.setState({ alertMutatasa: false });
           }}
         />
-               
-        
-        <View style={[styles.keresesdiv, {flex:1, flexDirection: "row",backgroundColor:"rgb(1,194,154)" }]}>
-         <Feather style={{ paddingTop: 5 ,}} name="search" size={28} color="rgb(50,50,50)" />
+
+
+        <View style={[styles.keresesdiv, { flex: 1, flexDirection: "row", backgroundColor: "rgb(1,194,154)" }]}>
+          <Feather style={{ paddingTop: 5, }} name="search" size={28} color="rgb(50,50,50)" />
           <TouchableOpacity
             onPress={this.Ugras}
             style={styles.textInputStyle} >
@@ -340,120 +330,121 @@ export default class Listaad extends Component {
           ></DialogInput>
         </View>
         {/*----FELSŐ CHECKBOX ELEMEI----*/}
-        <View style={{ flex: 11, backgroundColor: "rgb(50,50,50)",marginTop:20}}>
-       
-            {this.state.termekektomb.map((item,key)=>
-            <View key={key} style={{flexDirection:"row",flex:1}}>
-              <View style={{flex:1,backgroundColor:"rgb(50,50,50)",justifyContent:"center",alignContent:"center"}}>
-                {item.id<=2? <View
-                style={styles.felsocheck}
-              >
-                <View style={styles.icon}>
-                  <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
-                    <MaterialCommunityIcons
-                      name={
-                        item.isChecked
-                          ? "check"
-                          : "plus"
-                      }
-                      size={24}
-                      color="rgb(1,194,154)"
-                    />
-                  </Pressable>
-                </View>
-                <Text style={{ color: "rgb(50,50,50)", fontSize: 15 }}>{item.megnevezes}</Text>
-              </View>
-                :<Text></Text>}
-              </View>
-              <View style={{flex:1,backgroundColor:"rgb(50,50,50)"}}>{item.id>2? <View
-                style={[styles.felsocheck,{top:'-68%'}]}
-              >
-                <View style={styles.icon}>
-                  <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
-                    <MaterialCommunityIcons
-                      name={
-                        item.isChecked
-                          ? "check"
-                          : "plus"
-                      }
-                      size={24}
-                      color="rgb(1,194,154)"
-                    />
-                  </Pressable>
-                </View>
-                <Text style={{ color: "rgb(50,50,50)", fontSize: 15 }}>{item.megnevezes}</Text>
-              </View>
-                :<Text></Text>}</View>
-           
-            </View>
-            
-            )}
-    
-        </View>
-    
-        
-        {/*----lISTA ELEMEINEK MUTATÁSA----*/}
-        <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)",paddingTop:50 }}>
- 
-       
-       {this.state.data.map((item,key)=> <View style={styles.listatartalom}>
+        <View style={{ flex: 11, backgroundColor: "rgb(50,50,50)", marginTop: 20 }}>
 
-        <View style={{ flexDirection: "row", flex: 1 }}>
-          <View style={{ flex: 1, justifyContent: "center" }}>
-            <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="rgb(50,50,50)" />
-          </View>
-          <View style={{ flex: 13, justifyContent: "center" }}>
-            <Text style={{ color: "rgb(50,50,50)", marginLeft: 10 }}>{item.megnevezes}</Text>
-          </View>
-          <View style={styles.torlesgomb}>
-            <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
-              <MaterialCommunityIcons
-                name="delete"
-                size={24}
-                color="rgb(50,50,50)"
-              />
-            </TouchableOpacity>
-          </View>
+          {this.state.termekektomb.map((item, key) =>
+            <View key={key} style={{ flexDirection: "row", flex: 1 }}>
+              <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", justifyContent: "center", alignContent: "center" }}>
+                {item.id <= 2 ? <View
+                  style={styles.felsocheck}
+                >
+                  <View style={styles.icon}>
+                    <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
+                      <MaterialCommunityIcons
+                        name={
+                          item.isChecked
+                            ? "check"
+                            : "plus"
+                        }
+                        size={24}
+                        color="rgb(1,194,154)"
+                      />
+                    </Pressable>
+                  </View>
+                  <Text style={{ color: "rgb(50,50,50)", fontSize: 15 }}>{item.megnevezes}</Text>
+                </View>
+                  : <Text></Text>}
+              </View>
+              <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)" }}>{item.id > 2 ? <View
+                style={[styles.felsocheck, { top: '-68%' }]}
+              >
+                <View style={styles.icon}>
+                  <Pressable onPress={() => this.handleChange(item.id, item.megnevezes)}>
+                    <MaterialCommunityIcons
+                      name={
+                        item.isChecked
+                          ? "check"
+                          : "plus"
+                      }
+                      size={24}
+                      color="rgb(1,194,154)"
+                    />
+                  </Pressable>
+                </View>
+                <Text style={{ color: "rgb(50,50,50)", fontSize: 15 }}>{item.megnevezes}</Text>
+              </View>
+                : <Text></Text>}</View>
+
+            </View>
+
+          )}
+
         </View>
-        </View>)}
-        {this.state.segeddata.map((item,key)=> 
-        <View style={styles.listatartalom}>
-      <View style={{ flexDirection: "row", flex: 1 }}>
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="rgb(50,50,50)" />
-        </View>
-        <View style={{ flex: 13, justifyContent: "center" }}>
-          <Text style={{ color: "rgb(50,50,50)", marginLeft: 10 }}>{item.megnevezes}</Text>
-        </View>
-        <View style={styles.torlesgomb}>
-          <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
-            <MaterialCommunityIcons
-              name="delete"
-              size={24}
-              color="rgb(50,50,50)"
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      </View>)}
-        
+
+
+        {/*----lISTA ELEMEINEK MUTATÁSA----*/}
+        <View style={{ flex: 1, backgroundColor: "rgb(50,50,50)", paddingTop: 50 }}>
+
+
+          {this.state.data.map((item, key) => <View key={key} style={styles.listatartalom}>
+
+            <View style={{ flexDirection: "row", flex: 1 }}>
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="rgb(50,50,50)" />
+              </View>
+              <View style={{ flex: 13, justifyContent: "center" }}>
+                <Text style={{ color: "rgb(50,50,50)", marginLeft: 10 }}>{item.megnevezes}</Text>
+              </View>
+              <View style={styles.torlesgomb}>
+                <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={24}
+                    color="rgb(50,50,50)"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>)}
+          {this.state.segeddata.map((item, key) =>
+            <View key={key} style={styles.listatartalom}>
+              <View style={{ flexDirection: "row", flex: 1 }}>
+                <View style={{ flex: 1, justifyContent: "center" }}>
+                  <Entypo style={{ marginLeft: 10 }} name="shop" size={25} color="rgb(50,50,50)" />
+                </View>
+                <View style={{ flex: 13, justifyContent: "center" }}>
+                  <Text style={{ color: "rgb(50,50,50)", marginLeft: 10 }}>{item.megnevezes}</Text>
+                </View>
+                <View style={styles.torlesgomb}>
+                  <TouchableOpacity onPress={() => this.ListaelemTorles(item.megnevezes)}>
+                    <MaterialCommunityIcons
+                      name="delete"
+                      size={24}
+                      color="rgb(50,50,50)"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>)}
+
         </View>
         <Animated.View
-                    style={{zIndex:2,
-                        transform: [{translateX: this.pan.x}, {translateY: this.pan.y}],
-                    }}
-                    {...this.panResponder.panHandlers}>
-                           <View style={{ flex: 1, backgroundColor: "696969" }}>
-                        {this.state.data.length > 0 ||this.state.segeddata.length>0?
-                         <TouchableOpacity
-                            onPress={(this.adatatad)}
-                            style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
-                           <Feather name="check" size={50} color="black" />
-                        </TouchableOpacity> : <Text></Text>}
+          style={{
+            zIndex: 2,
+            transform: [{ translateX: this.pan.x }, { translateY: this.pan.y }],
+          }}
+          {...this.panResponder.panHandlers}>
+          <View style={{ flex: 1, backgroundColor: "696969" }}>
+            {this.state.data.length > 0 || this.state.segeddata.length > 0 ?
+              <TouchableOpacity
+                onPress={(this.adatatad)}
+                style={{ backgroundColor: "rgb(1,194,154)", width: 65, alignSelf: "flex-end", alignItems: "center", borderRadius: 150 / 2, height: 65, justifyContent: "center", zIndex: 1, }}>
+                <Feather name="check" size={50} color="black" />
+              </TouchableOpacity> : <Text></Text>}
 
-                    </View>
-                    </Animated.View>
-       
+          </View>
+        </Animated.View>
+
       </ScrollView>
     );
   }
@@ -500,19 +491,19 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(50,50,50)",
     borderRadius: 50,
     margin: 5,
-    width:'13%',
+    width: '13%',
 
   },
   torlesgomb:
   {
     flex: 1,
     justifyContent: "center",
-    alignSelf:"center",
+    alignSelf: "center",
     //backgroundColor: "rgb(50,50,50)",
     width: 30,
-    height:30,
-    marginRight:5,
-    borderRadius:5
+    height: 30,
+    marginRight: 5,
+    borderRadius: 5
   },
   keresesdiv: {
     alignItems: "center",
