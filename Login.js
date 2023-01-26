@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, Dimensions, TouchableOpacity, Pressable,PanResponder} from 'react-native';
+import { ChildComponent, FlatList, Text, StyleSheet, View, TextInput, Button, Dimensions, TouchableOpacity, Pressable, PanResponder } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { ipcim } from "./IPcim";
 const IP = require('./IPcim')
 
@@ -20,6 +21,7 @@ export default class Login extends Component {
       fokusz1: false,
       rosszjelszo: false,
       rosszfelhasznalonev: false,
+      lathatojelszo: true
     };
   }
   storeData = async (value) => {
@@ -49,7 +51,8 @@ export default class Login extends Component {
     if (talalt > 0) {
       this.storeData(this.state.felhasznalonev)
       this.props.navigation.navigate('Home');
-
+      this.setState({ felhasznalonev: "" })
+      this.setState({ jelszo: "" })
 
     }
     else {
@@ -74,6 +77,15 @@ export default class Login extends Component {
 
 
   }
+  JelszoLathato = () => {
+    console.log("elso:", this.state.lathatojelszo)
+    if (this.state.lathatojelszo == true) {
+      this.setState({ lathatojelszo: false })
+    }
+    else if (this.state.lathatojelszo == false) {
+      this.setState({ lathatojelszo: true })
+    }
+  }
 
 
   render() {
@@ -87,15 +99,16 @@ export default class Login extends Component {
             <View style={[this.state.fokusz1 ? styles.felhaszmalodivfocus : styles.felhasznaloodiv, { backgroundColor: this.state.rosszfelhasznalonev ? "red" : "white" }]}>
               <FontAwesome style={{ marginLeft: 5 }} name="user" size={28} color="black" />
               <TextInput
-               cursorColor={"rgb(50,50,50)"}
+                cursorColor={"rgb(50,50,50)"}
                 onFocus={() => this.setState({ fokusz1: true })}
                 onBlur={() => this.setState({ fokusz1: false })}
                 style={styles.textinputfelh}
                 placeholder="Felhasználónév"
                 onChangeText={(felhasznalonev_szoveg) => this.setState({ felhasznalonev: felhasznalonev_szoveg })}
                 onChange={() => this.setState({ rosszfelhasznalonev: false })}
-                value={this.state.regisztralfelh}>
+                value={this.state.felhasznalonev}>
               </TextInput>
+
             </View>
           </View>
           <View style={styles.divek}>
@@ -104,17 +117,18 @@ export default class Login extends Component {
             <View style={[this.state.fokusz ? styles.jelszodivfocus : styles.jelszodiv, { backgroundColor: this.state.rosszjelszo ? "red" : "white" }]}>
               <MaterialCommunityIcons name="lock" size={28} color="black" />
               <TextInput
-                
                 cursorColor={"rgb(50,50,50)"}
                 onFocus={() => this.setState({ fokusz: true })}
                 onBlur={() => this.setState({ fokusz: false })}
                 style={styles.textinputjelsz}
                 placeholder="Jelszó"
-                secureTextEntry={true}
+                secureTextEntry={this.state.lathatojelszo}
                 onChangeText={(jelszoszoveg) => this.setState({ jelszo: jelszoszoveg })}
                 onChange={() => this.setState({ rosszjelszo: false })}
-                value={this.state.regisztraljelsz}>
+                value={this.state.jelszo}>
               </TextInput>
+              <TouchableOpacity onPress={this.JelszoLathato}><Ionicons style={{ justifyContent: "center", paddingRight: 10, alignItems: "center", paddingTop: 6 }} name={this.state.lathatojelszo ? "eye-outline" : "eye-off-outline"} size={24} color="black" /></TouchableOpacity>
+
             </View>
           </View>
 
